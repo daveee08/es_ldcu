@@ -94,7 +94,9 @@
         </tr>
         <tr>
             <td>Student Name:
-                <?php echo e($studinfo->lastname . ', ' . $studinfo->firstname . ' ' . $studinfo->middlename . ' ' . $studinfo->suffix); ?></td>
+                <?php echo e($studinfo->lastname . ', ' . $studinfo->firstname . ' ' . $studinfo->middlename . ' ' . $studinfo->suffix); ?>
+
+            </td>
         </tr>
         <?php if($levelid < 17): ?>
             <td>Level|Section: <?php echo e($levelname); ?> - <?php echo e($sectionname); ?>
@@ -336,7 +338,7 @@
                         $amountdue = 0;
                         $amountdue_not_tuition = 0;
                         foreach ($monthdue as $due) {
-                            if (date('n', strtotime($due->duedate)) == $monthsetup['monthid']) {
+                            if (date('n', strtotime($due->duedate)) == $monthsetup->monthid) {
                                 $amountdue_not_tuition += str_replace(',', '', $due->paymentnotuition);
                             }
                             $amountdue += str_replace(',', '', $due->balance);

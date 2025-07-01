@@ -7241,4 +7241,13 @@ Route::get('/superadmin/download/student-masterlist-batch','MigrationController\
 );
 
 //emailer
-Route::post('/statementofacct/emailer', 'FinanceControllers\StatementofAccountController@sendEmail')->name('statementofacct.sendemail');
+Route::get('/statementofacct/emailer', 'FinanceControllers\StatementofAccountController@sendEmail')->name('statementofacct.sendemail');
+Route::get('/test-send-email', function () {
+    $request = new \Illuminate\Http\Request([
+        'student_ids' => [7785], // Use a real student ID with a valid email
+        'selectedschoolyear' => 2,
+        'selectedsemester' => 1,
+        'selectedmonth' => 7,
+    ]);
+    return app(\App\Http\Controllers\FinanceControllers\StatementofAccountController::class)->sendEmail($request);
+});

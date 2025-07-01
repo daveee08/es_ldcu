@@ -2909,7 +2909,7 @@ class StatementofAccountController extends Controller
             $monthinword = $monthdesc;
             // $monthinword = '';
             // $monthsetup = db::table('monthsetup')->where('id', $monthsetupid)->first();
-            $monthsetup = [
+            $monthsetup = (object)[
                 'monthid' => $monthsetupid,
                 'description' => $monthdesc
             ];
@@ -6647,46 +6647,183 @@ class StatementofAccountController extends Controller
         }
     }
 
-    public function sendEmail(Request $request)
-    {
-        $studentIds = $request->input('student_ids', []);
-        $syid = $request->input('selectedschoolyear');
-        $semid = $request->input('selectedsemester');
-        $monthid = $request->input('selectedmonth');
 
-        foreach ($studentIds as $studid) {
-            $student = DB::table('studinfo')->where('id', $studid)->first();
-            if (!$student || empty($student->semail)) continue;
-
-            $queryParams = http_build_query([
-                'studid' => $studid,
-                'selectedschoolyear' => $syid,
-                'selectedsemester' => $semid,
-                'selectedmonth' => $monthid,
-                'exporttype' => 'pdf',
-            ]);
-
-            $pdfUrl = url('/statementofacctgetaccount') . '?' . $queryParams;
-
-            $pdfData = file_get_contents($pdfUrl);
-            if ($pdfData === false) {
-                \Log::error("Failed to get PDF for student ID {$studid}");
-                continue;
-            }
-
-            \Mail::send('emails.soaemail', [
-                'student' => $student
-            ], function ($message) use ($student, $pdfData) {
-                $message->to($student->semail)
-                    ->subject('Your Statement of Account')
-                    ->attachData($pdfData, 'StatementOfAccount.pdf');
-            });
+public function sendEmail(Request $request)
+{
+    $studentIds = $request->input('student_ids', []);
+    $syid = $request->input('selectedschoolyear');
+    $semid = $request->input('selectedsemester');
+    $monthsetupid = $request->input('selectedmonth');
+    $monthdesc = '';
+    if ($monthsetupid) {
+        $monthData = DB::table('monthsetup')->where('id', $monthsetupid)->first();
+        if ($monthData) {
+            $monthdesc = $monthData->description;
         }
-
-        return response()->json(['status' => 'ok']);
     }
 
-    public function exportall_v2(Request $request)
+    foreach ($studentIds as $studid) {
+        $levelid = 0;
+        $sectionid = 0;
+        $courseid = 0;
+        $sectionname = '';
+        $courseabrv = '';
+        $studinfo = DB::table('studinfo')->where('id', $studid)->first();
+        if (!$studinfo || empty($studinfo->semail)) continue;
+
+        $estud = DB::table('enrolledstud')
+            ->select('levelid', 'sectionid', 'studstatus')
+            ->where('studid', $studid)
+            ->where('syid', $syid)
+            ->where('deleted', 0)
+            ->first();
+
+        if ($estud) {
+            $levelid = $estud->levelid;
+            $sectionid = $estud->sectionid;
+            $section = DB::table('sections')->where('id', $sectionid)->first();
+            if ($section) $sectionname = $section->sectionname;
+        } else {
+            $estud = DB::table('sh_enrolledstud')
+                ->select('levelid', 'sectionid', 'studstatus')
+                ->where('studid', $studid)
+                ->where('deleted', 0)
+                ->first();
+            if ($estud) {
+                $levelid = $estud->levelid;
+                $sectionid = $estud->sectionid;
+                $section = DB::table('sections')->where('id', $sectionid)->first();
+                if ($section) $sectionname = $section->sectionname;
+            } else {
+                $estud = DB::table('college_enrolledstud')
+                    ->select('yearLevel as levelid', 'courseid', 'studstatus')
+                    ->where('studid', $studid)
+                    ->where('deleted', 0)
+                    ->first();
+                if ($estud) {
+                    $levelid = $estud->levelid;
+                    $courseid = $estud->courseid;
+                    $courses = DB::table('college_courses')->where('id', $courseid)->first();
+                    if ($courses) $courseabrv = $courses->courseabrv;
+                } else {
+                    $estud = DB::table('studinfo')
+                        ->select('levelid', 'studstatus')
+                        ->where('id', $studid)
+                        ->first();
+                    if ($estud) $levelid = $estud->levelid;
+                }
+            }
+        }
+
+        // LEDGER
+        if ($levelid == 14 || $levelid == 15) {
+            $ledger = DB::table('studledger')
+                ->select('studledger.*', 'chrngsetup.groupname')
+                ->leftJoin('chrngsetup', 'studledger.classid', '=', 'chrngsetup.classid')
+                ->where('studledger.studid', $studid)
+                ->where('studledger.syid', $syid)
+                ->where('studledger.amount', '>', 0)
+                ->where(function ($q) use ($semid) {
+                    if (DB::table('schoolinfo')->first()->shssetup == 0) {
+                        $q->where('semid', $semid);
+                    }
+                })
+                ->where('studledger.void', 0)
+                ->where('studledger.deleted', 0)
+                ->groupBy('studledger.id')
+                ->orderBy('studledger.createddatetime', 'asc')
+                ->get();
+        } elseif ($levelid >= 17 && $levelid <= 25) {
+            $ledger = DB::table('studledger')
+                ->select('studledger.*', 'chrngsetup.groupname')
+                ->leftJoin('chrngsetup', 'studledger.classid', '=', 'chrngsetup.classid')
+                ->where('studledger.studid', $studid)
+                ->where('studledger.syid', $syid)
+                ->where('studledger.semid', $semid)
+                ->where('studledger.classid', '!=', null)
+                ->where('studledger.amount', '>', 0)
+                ->where('studledger.deleted', 0)
+                ->where('studledger.void', 0)
+                ->groupBy('studledger.id')
+                ->orderBy('studledger.createddatetime', 'asc')
+                ->get();
+        } else {
+            $ledger = DB::table('studledger')
+                ->select('studledger.*', 'chrngsetup.groupname')
+                ->leftJoin('chrngsetup', 'studledger.classid', '=', 'chrngsetup.classid')
+                ->where('studledger.studid', $studid)
+                ->where('studledger.syid', $syid)
+                ->where('studledger.deleted', 0)
+                ->where('studledger.void', 0)
+                ->where('studledger.amount', '>', 0)
+                ->groupBy('studledger.id')
+                ->orderBy('studledger.createddatetime', 'asc')
+                ->get();
+        }
+
+        // PAYMENTS
+        $payments = DB::table('studledger')
+            ->select('studledger.*', 'chrngsetup.groupname')
+            ->leftJoin('chrngsetup', 'studledger.classid', '=', 'chrngsetup.classid')
+            ->where('studledger.studid', $studid)
+            ->where('studledger.syid', $syid)
+            ->where(function ($q) use ($semid, $levelid) {
+                if ($levelid == 14 || $levelid == 15) {
+                    if ($semid == 3) {
+                        $q->where('semid', 3);
+                    } else {
+                        if (DB::table('schoolinfo')->first()->shssetup == 0) {
+                            $q->where('semid', $semid);
+                        } else {
+                            $q->where('semid', '!=', 3);
+                        }
+                    }
+                } elseif ($levelid >= 17 && $levelid <= 25) {
+                    $q->where('semid', $semid);
+                }
+            })
+            ->where('payment', '>', 0)
+            ->where('studledger.deleted', 0)
+            ->where('studledger.void', 0)
+            ->orderBy('studledger.createddatetime', 'asc')
+            ->get();
+
+        // MONTH DUE
+        $monthsetup = DB::table('monthsetup')->where('id', $monthsetupid)->first();
+        $monthinword = $monthsetup ? $monthsetup->description : '';
+        $action = 'pdf';
+        $monthdue = FinanceUtilityModel::assessment_gen($studid, $syid, $semid, $monthsetupid, $action);
+
+        $selectedschoolyear = DB::table('sy')->where('id', $syid)->first()->sydesc ?? '';
+        $selectedsemester = DB::table('semester')->where('id', $semid)->first()->semester ?? '';
+
+        $pdf = PDF::loadView('finance/reports/pdf/pdf_statementofacct_default_v2', compact(
+            'ledger',
+            'payments',
+            'monthsetup',
+            'monthdue',
+            'selectedschoolyear',
+            'selectedsemester',
+            'monthinword',
+            'studinfo',
+            'levelid',
+            'courseabrv',
+            'sectionname'
+        ))->setPaper('letter');
+        $pdfData = $pdf->output();
+
+        \Mail::send('emails.soaemail', [
+            'student' => $studinfo
+        ], function ($message) use ($studinfo, $pdfData) {
+            $message->to($studinfo->semail)
+                ->subject('Your Statement of Account')
+                ->attachData($pdfData, 'StatementOfAccount.pdf');
+        });
+    }
+
+    return response()->json(['status' => 'ok']);
+}
+public function exportall_v2(Request $request)
     {
         $semid = $request->get('selectedsemester');
         $syid = $request->get('selectedschoolyear');

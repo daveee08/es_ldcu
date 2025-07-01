@@ -19,8 +19,8 @@
                 <div class="col-sm-6">
                     <h1>Statement of Account</h1>
                     <!-- <h4 class="text-warning" style="text-shadow: 1px 1px 1px #000000">
-                                                                                                                                                                                    <i class="fa fa-file-invoice nav-icon"></i>
-                                                                                                                                                                                    <b>STUDENT LEDGER</b></h4> -->
+                                                                                                                                                                                            <i class="fa fa-file-invoice nav-icon"></i>
+                                                                                                                                                                                            <b>STUDENT LEDGER</b></h4> -->
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -1083,41 +1083,39 @@
             })
 
             $(document).on('click', '#btn-print', function() {
-                let checkedIds = [];
+                let studentIds = [];
                 $('.student_checkbox:checked').each(function() {
-                    checkedIds.push($(this).val());
+                    studentIds.push($(this).val());
                 });
 
-                if (checkedIds.length === 0) {
-                    Swal.fire('No students selected', 'Please select at least one student.', 'warning');
+                let selectedschoolyear = $('#selectedschoolyear').val();
+                let selectedsemester = $('#selectedsemester').val();
+                let selectedgradelevel = $('#selectedgradelevel').val();
+                let selectedsection = $('#selectedsection').val();
+                let selectedmonth = $('#selectedmonth').val();
+
+                if (studentIds.length === 0) {
+                    Swal.fire('Please select at least one student.');
                     return;
                 }
 
                 $.ajax({
-                    url: "{{ route('statementofacct.sendemail') }}",
-                    type: 'POST',
+                    url: '/statementofacct/emailer',
+                    type: 'GET',
                     data: {
-                        student_ids: checkedIds,
-                        custom_msg: '',
-                        selectedschoolyear: $('#selectedschoolyear').val(),
-                        selectedsemester: $('#selectedsemester').val(),
-                        selectedmonth: $('#selectedmonth').val(),
-                        _token: '{{ csrf_token() }}'
-                    },
-                    beforeSend: function() {
-                        Swal.fire({
-                            title: 'Sending emails...',
-                            allowOutsideClick: false,
-                            onBeforeOpen: () => Swal.showLoading()
-                        });
+                        student_ids: studentIds,
+                        selectedschoolyear: selectedschoolyear,
+                        selectedsemester: selectedsemester,
+                        selectedgradelevel: selectedgradelevel,
+                        selectedsection: selectedsection,
+                        selectedmonth: selectedmonth
                     },
                     success: function(response) {
-                        Swal.close();
                         Swal.fire('Success', 'Emails sent successfully!', 'success');
                     },
-                    error: function() {
-                        Swal.close();
-                        Swal.fire('Error', 'Failed to send emails.', 'error');
+                    error: function(xhr) {
+                        Swal.fire('Error', xhr.responseJSON?.error || 'An error occurred.',
+                            'error');
                     }
                 });
             });
