@@ -280,7 +280,6 @@ class RegistrarMigration extends Controller
             $filename = $folderPath . '/' . preg_replace('/[^A-Za-z0-9_\-]/', '_', $section->sectionname) . '_masterlist.pdf';
             file_put_contents($filename, $pdf->output());
         }
-        // Get school name for ZIP file naming
         $schoolinfo = \DB::table('schoolinfo')->first();
         $schoolname = (is_object($schoolinfo) && isset($schoolinfo->schoolname)) ? preg_replace('/[^A-Za-z0-9_\-]/', '_', $schoolinfo->schoolname) : 'School';
         $zipname = storage_path('app/' . $schoolname . '_student_master_list.zip');
