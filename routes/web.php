@@ -7237,9 +7237,6 @@ Route::get('/api/reset-payment', 'FinanceControllers\UtilityController@resetpaym
 Route::get('/curriculum/export', 'SuperAdminController\College\ProspectusSetupController@export');
 Route::post('/curriculum/import', 'SuperAdminController\College\ProspectusSetupController@importSubjects')->name('import.subjects');
 
-Route::get('/superadmin/download/student-masterlist-batch','MigrationController\RegistrarBatch@downloadByGrade'
-);
-
 //emailer
 Route::get('/statementofacct/emailer', 'FinanceControllers\StatementofAccountController@sendEmail')->name('statementofacct.sendemail');
 Route::get('/test-send-email', function () {
@@ -7251,3 +7248,8 @@ Route::get('/test-send-email', function () {
     ]);
     return app(\App\Http\Controllers\FinanceControllers\StatementofAccountController::class)->sendEmail($request);
 });
+
+
+//migration
+Route::get('/batchmasterlist', 'Migration\RegistrarMigration@generateAllMasterlists');
+Route::get('/superadmin/download/student-masterlist-batch', 'Migration\RegistrarMigration@downloadStudentMasterlistBatch');

@@ -1277,7 +1277,7 @@ class ReportsController extends Controller
                 // return $values;
                 // $contentsArray = explode("\n",$contents);
 
-                //return $subjects;	
+                //return $subjects;
 
                 try {
                     $document->cloneRowAndSetValues('subjectcode', $subjects);
@@ -3032,13 +3032,13 @@ class ReportsController extends Controller
             $sheet->setCellValue('U6', $levelname);
             $sheet->setCellValue('X6', $sectionname);
 
-            // ================================  TABLE HEADER     
+            // ================================  TABLE HEADER
             $malecount = 1;
             $femalecount = 1;
             $cellcount = 11;
 
             if (count($students) > 0) {
-                // ================================  MALE STUDENTS     
+                // ================================  MALE STUDENTS
                 $malestudents = collect($students->where('gender', 'MALE'));
                 foreach ($malestudents as $male) {
                     $sheet->insertNewRowBefore($cellcount, 1);
@@ -3105,7 +3105,7 @@ class ReportsController extends Controller
                 $sheet->getStyle('A' . $cellcount . ':AA' . $cellcount)->applyFromArray($borderstyle);
                 $cellcount += 1;
 
-                // ================================  FEMALE STUDENTS     
+                // ================================  FEMALE STUDENTS
                 $femalestudents = collect($students->where('gender', 'FEMALE'));
                 foreach ($femalestudents as $female) {
                     $contactno = null;
@@ -4674,7 +4674,7 @@ class ReportsController extends Controller
 
         }
     }
-    // function reportschoolform_6(Request $request, $id,$syid,$sectionid,$gradelevelid){ 
+    // function reportschoolform_6(Request $request, $id,$syid,$sectionid,$gradelevelid){
     function reportschoolform_6(Request $request, $id)
     {
         // return $id;
@@ -5151,7 +5151,7 @@ class ReportsController extends Controller
                 ->where('users.id', auth()->user()->id)
                 ->join('teacher', 'users.id', '=', 'teacher.userid')
                 ->first();
-            
+
             if ($schoolregistrar) {
                 $schoolregistrar = $schoolregistrar->firstname . ' ' . ($schoolregistrar->middlename ? $schoolregistrar->middlename[0] . '. ' : '') . $schoolregistrar->lastname;
             } else {
@@ -5365,7 +5365,7 @@ class ReportsController extends Controller
                     ->where('studinfo.id', $request->get('studid'))
                     ->where('enrolledstud.syid', $request->get('syid'))
                     ->first();
-                
+
                 return view('registrar.otherprintables.templatejhs')
                     ->with('studentinfo', $studentinfo)
                     ->with('semesterinfo', $semesterinfo)
@@ -5399,8 +5399,8 @@ class ReportsController extends Controller
                         ->with('signatoryinfo', $signatoryinfo)
                         ->with('schoolregistrar', $schoolregistrar)
                         ->with('schoolinfo', $schoolinfo);
-                
-               
+
+
             } else {
                 $studentinfo = DB::table('studinfo')
                     ->select('studinfo.id', 'studinfo.lrn', 'studinfo.lastname', 'studinfo.firstname', 'studinfo.middlename', 'studinfo.suffix', 'studinfo.gender', 'studinfo.levelid', 'college_courses.courseDesc as strandname', 'college_courses.courseabrv as strandcode', 'gradelevel.levelname', 'college_sections.sectionDesc as sectionname', 'college_colleges.collegeDesc as collegename')
@@ -5455,12 +5455,12 @@ class ReportsController extends Controller
                     ->where('enrolledstud.syid', $request->get('syid'))
                     ->first();
 
-                    
+
                 if (!$studentinfo) {
                     return back()->with('error', 'No record found.');
                 }
-                   
-                       
+
+
                 if (strtolower(DB::table('schoolinfo')->first()->abbreviation) == 'stii') {
                     if($request->get('certtype') == 'cor'){
                         $request->merge(['levelid' => $studentinfo->levelid]);
@@ -5530,7 +5530,7 @@ class ReportsController extends Controller
 
                             $pdf = PDF::loadview('registrar.otherprintables.gtc_coejhs', compact('studentinfo', 'syinfo', 'schoolinfo', 'semesterinfo', 'givendate', 'schoolregistrar', 'signatorylabel', 'signatories', 'schedules'))->setPaper('letter');
                         }else{
-                            
+
 
                             $pdf = PDF::loadview('registrar.otherprintables.pdf_templatejhs', compact('studentinfo', 'syinfo', 'schoolinfo', 'semesterinfo', 'givendate', 'schoolregistrar', 'purpose', 'signatorylabel', 'signatoryinfo'))->setPaper('letter');
                         }
@@ -5540,7 +5540,7 @@ class ReportsController extends Controller
 
                 // return $request->all();
 
-                
+
                     $studentinfo = DB::table('studinfo')
                         ->select('studinfo.id', 'studinfo.lrn', 'studinfo.lastname', 'studinfo.firstname', 'studinfo.middlename', 'studinfo.suffix', 'studinfo.levelid', 'sh_strand.strandname', 'sh_strand.strandcode', 'gradelevel.levelname', 'sections.sectionname', 'studinfo.gender','studinfo.sid')
                         ->join('sh_enrolledstud', 'studinfo.id', '=', 'sh_enrolledstud.studid')
@@ -5578,7 +5578,7 @@ class ReportsController extends Controller
                         if (!$studentinfo) {
                             return back()->with('error', 'No record found.');
                         }
-    
+
                         $signatorylabel = $request->get('signatorylabel');
                          if(strtolower(DB::table('schoolinfo')->first()->abbreviation) == 'gtcd' || strtolower(DB::table('schoolinfo')->first()->abbreviation) == 'taborin'){
 
@@ -5659,7 +5659,7 @@ class ReportsController extends Controller
                 $subjects = \App\Models\College\TOR::getrecords($studentinfo->id, $schoolyears);
                 $subjects = $subjects[0]->subjdata;
                 $purpose = $request->get('purpose');
-                
+
                 if(strtolower(DB::table('schoolinfo')->first()->abbreviation) == 'stii'){
                     $signatoryinfo = DB::table('signatory')
                                     ->where('form', 'coe')
@@ -7323,7 +7323,7 @@ class ReportsController extends Controller
                                                 ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_NONE);
                                         }
                                         if ($x == 4) {
-                                            // return 'A'.($startcellno-1);                          
+                                            // return 'A'.($startcellno-1);
                                             $sheet->getStyle('A' . ($startcellno - 1) . ':AI' . ($startcellno - 1))
                                                 ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
                                         }
@@ -7950,7 +7950,7 @@ class ReportsController extends Controller
             }
             $allstudents = collect($allstudents)->unique('id')->sortBy('sortname')->values()->all();
             // $allstudents = collect($allstudents)->unique('id');
-            // return count($allstudents); 
+            // return count($allstudents);
             if ($request->get('action') == 'filter') {
                 $checkifexist = DB::table('signatory')
                     ->where('form', 'enrollment_report_reg')
@@ -8034,7 +8034,7 @@ class ReportsController extends Controller
                 $seminfo = DB::table('semester')->where('id', $request->get('semid'))->first();
                 $registrar = $schoolregistrar;
                 $students = $allstudents;
-                // return count($students); 
+                // return count($students);
                 $pdf = PDF::loadview('registrar/summaries/studentvaccination/pdf_studentvaccination', compact('students', 'sydesc', 'levelname', 'registrar', 'president'));
                 return $pdf->stream('Students Vaccination Status.pdf');
             }
@@ -9786,16 +9786,16 @@ class ReportsController extends Controller
                         // $sheet->getStyle('E'.$startcellno)->getAlignment()->setHorizontal('center');
                         // $startcellno+=3;
                         // $sheet->mergeCells('T'.$startcellno.':Y'.($startcellno));
-                        // $sheet->setCellValue('T'.$startcellno,$registrar);     
+                        // $sheet->setCellValue('T'.$startcellno,$registrar);
                         // $sheet->getStyle('T'.$startcellno)->getAlignment()->setVertical('center');
-                        // $sheet->getStyle('T'.$startcellno)->getAlignment()->setHorizontal('center');                   
+                        // $sheet->getStyle('T'.$startcellno)->getAlignment()->setHorizontal('center');
                         // $sheet->getStyle('T'.$startcellno.':Y'.($startcellno))
                         // ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
                         // $startcellno+=1;
                         // $sheet->mergeCells('T'.$startcellno.':Y'.($startcellno));
-                        // $sheet->setCellValue('T'.$startcellno,'Registrar');     
+                        // $sheet->setCellValue('T'.$startcellno,'Registrar');
                         // $sheet->getStyle('T'.$startcellno)->getAlignment()->setVertical('center');
-                        // $sheet->getStyle('T'.$startcellno)->getAlignment()->setHorizontal('center');  
+                        // $sheet->getStyle('T'.$startcellno)->getAlignment()->setHorizontal('center');
 
                         // $activesheet = 1;
 
@@ -10456,7 +10456,7 @@ class PrintableCOR extends TCPDF
     //     if(strtolower($schoollogo->abbreviation) == 'msmi')
     //     {
     //         $this->Cell(0, 15, 'Page '.$this->getAliasNumPage(), 0, false, 'R', 0, '', 0, false, 'T', 'M');
-    //         $this->Cell(0, 25, date('m/d/Y'), 0, false, 'R', 0, '', 0, false, 'T', 'M');   
+    //         $this->Cell(0, 25, date('m/d/Y'), 0, false, 'R', 0, '', 0, false, 'T', 'M');
     //     }
 
     //     $schoolname = $this->writeHTMLCell(false, 50, 40, 10, '<span style="font-weight: bold">'.$schoollogo->schoolname.'</span>', false, false, false, $reseth=true, $align='L', $autopadding=true);
@@ -10480,7 +10480,7 @@ class PrintableCOR extends TCPDF
     //     {
     //         $this->Cell(0, 10, date('l, F d, Y'), 0, false, 'L', 0, '', 0, false, 'T', 'M');
     //         $this->Cell(0, 10, 'Page '.$this->getAliasNumPage().' of '.$this->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'T', 'M');
-    //         // $this->Cell(0, 15, date('m/d/Y'), 0, false, 'R', 0, '', 0, false, 'T', 'M');   
+    //         // $this->Cell(0, 15, date('m/d/Y'), 0, false, 'R', 0, '', 0, false, 'T', 'M');
     //     }
     // }
 

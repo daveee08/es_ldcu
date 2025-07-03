@@ -47,17 +47,17 @@
         border-color: #c6c8ca;
     }
 </style>
-@if ($acadprogid == 6)
-    @php
+<?php if($acadprogid == 6): ?>
+    <?php
         $strands = collect($students)->groupBy('strandcode');
-    @endphp
+    ?>
     <div class="card card-success card-eachsection">
         <div class="card-header">
             <div class="row">
                 <div class="col-12">
                     <div class="icheck-primary d-inline">
                         <input type="checkbox" id="checkboxesc" name="escCheck"
-                            @if ($esc > 0) value="1" checked @else value="0" @endif>
+                            <?php if($esc > 0): ?> value="1" checked <?php else: ?> value="0" <?php endif; ?>>
                         <label for="checkboxesc">
                             ESC Grantee
                         </label>
@@ -65,33 +65,33 @@
                 </div>
             </div>
         </div>
-        @if (count($students) == 0)
+        <?php if(count($students) == 0): ?>
             <div class="alert alert-primary" role="alert">
                 No students enrolled!
             </div>
-        @else
+        <?php else: ?>
             <div class="card-body">
                 <div class="row">
-                    @if (count($students) == 0)
+                    <?php if(count($students) == 0): ?>
                         <div class="col-md-12">
                             <div class="alert alert-primary" role="alert">
                                 No students enrolled!
                             </div>
                         </div>
-                    @else
+                    <?php else: ?>
                         <div class="col-md-12 mb-2 text-right">
-                            @if (strtolower(DB::table('schoolinfo')->first()->abbreviation) == 'gbbc' ||
-                                    strtolower(DB::table('schoolinfo')->first()->abbreviation) == 'sbc')
-                                <form action="/reports_studentmasterlist/print/{{ $syid }}/{{ $sectionid }}"
+                            <?php if(strtolower(DB::table('schoolinfo')->first()->abbreviation) == 'gbbc' ||
+                                    strtolower(DB::table('schoolinfo')->first()->abbreviation) == 'sbc'): ?>
+                                <form action="/reports_studentmasterlist/print/<?php echo e($syid); ?>/<?php echo e($sectionid); ?>"
                                     target="_blank" id="exportform" class="m-0 p-0">
                                     <input type="hidden" name="exporttype" id="exporttype" />
-                                    <input type="hidden" name="levelid" value="{{ $levelid }}" />
-                                    <input type="hidden" name="semid" value="{{ $semid }}" />
-                                    <input type="hidden" name="syid" value="{{ $syid }}" />
-                                    <input type="hidden" name="collegeid" value="{{ $collegeid }}" />
-                                    <input type="hidden" name="courseid" value="{{ $courseid }}" />
+                                    <input type="hidden" name="levelid" value="<?php echo e($levelid); ?>" />
+                                    <input type="hidden" name="semid" value="<?php echo e($semid); ?>" />
+                                    <input type="hidden" name="syid" value="<?php echo e($syid); ?>" />
+                                    <input type="hidden" name="collegeid" value="<?php echo e($collegeid); ?>" />
+                                    <input type="hidden" name="courseid" value="<?php echo e($courseid); ?>" />
                                     <input type="hidden" name="sectionid" value="0" />
-                                    <input type="hidden" name="acadprogid" value="{{ $acadprogid }}" />
+                                    <input type="hidden" name="acadprogid" value="<?php echo e($acadprogid); ?>" />
                                     <div class="row">
                                         <div class="col-md-3 text-left">
                                             <select class="form-control form-control-sm" name="format">
@@ -112,19 +112,19 @@
                                                 id="exportexcellist">Export to EXCEL (LIST)</button>
                                         </div>
                                     </div>
-                                    <input type="hidden" value="{{ $esc }}" name="esc" />
+                                    <input type="hidden" value="<?php echo e($esc); ?>" name="esc" />
                                 </form>
-                            @else
-                                <form action="/reports_studentmasterlist/print/{{ $syid }}/0" target="_blank"
+                            <?php else: ?>
+                                <form action="/reports_studentmasterlist/print/<?php echo e($syid); ?>/0" target="_blank"
                                     id="exportform" class="m-0 p-0">
                                     <input type="hidden" name="exporttype" id="exporttype" />
-                                    <input type="hidden" name="levelid" value="{{ $levelid }}" />
-                                    <input type="hidden" name="semid" value="{{ $semid }}" />
-                                    <input type="hidden" name="syid" value="{{ $syid }}" />
-                                    <input type="hidden" name="collegeid" value="{{ $collegeid }}" />
-                                    <input type="hidden" name="courseid" value="{{ $courseid }}" />
+                                    <input type="hidden" name="levelid" value="<?php echo e($levelid); ?>" />
+                                    <input type="hidden" name="semid" value="<?php echo e($semid); ?>" />
+                                    <input type="hidden" name="syid" value="<?php echo e($syid); ?>" />
+                                    <input type="hidden" name="collegeid" value="<?php echo e($collegeid); ?>" />
+                                    <input type="hidden" name="courseid" value="<?php echo e($courseid); ?>" />
                                     <input type="hidden" name="sectionid" value="0" />
-                                    <input type="hidden" name="acadprogid" value="{{ $acadprogid }}" />
+                                    <input type="hidden" name="acadprogid" value="<?php echo e($acadprogid); ?>" />
                                     <div class="row">
                                         <div class="col-md-3 text-left">
                                             <select class="form-control form-control-sm" name="format">
@@ -139,102 +139,106 @@
                                                 id="exportexcel">Export to EXCEL</button>
                                         </div>
                                         <div class="col-md-5">
-                                            @if (strtolower(DB::table('schoolinfo')->first()->abbreviation) == 'hccsi')
+                                            <?php if(strtolower(DB::table('schoolinfo')->first()->abbreviation) == 'hccsi'): ?>
                                                 <button type="button" class="btn btn-default btn-sm btn-export"
                                                     id="exportexcelinfo">Export to EXCEL (LIST)</button>
                                                 <button type="button" class="btn btn-default btn-sm btn-export"
                                                     id="exportexcellist">Export to EXCEL (INFO)</button>
-                                            @else
+                                            <?php else: ?>
                                                 <button type="button" class="btn btn-default btn-sm btn-export"
                                                     id="exportexcelinfo">Export to EXCEL (INFO)</button>
                                                 <button type="button" class="btn btn-default btn-sm btn-export"
                                                     id="exportexcellist">Export to EXCEL (LIST)</button>
-                                            @endif
+                                            <?php endif; ?>
                                         </div>
                                     </div>
-                                    <input type="hidden" value="{{ $esc }}" name="esc" />
+                                    <input type="hidden" value="<?php echo e($esc); ?>" name="esc" />
                                 </form>
-                            @endif
+                            <?php endif; ?>
 
                         </div>
 
                         <div class="col-md-12">
-                            @foreach ($strands as $key => $eachstrand)
+                            <?php $__currentLoopData = $strands; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $eachstrand): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <h5>{{ $key }}</h5>
+                                        <h5><?php echo e($key); ?></h5>
                                     </div>
                                     <div class="col-md-6">
                                         <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MALE</label>
                                         <ol>
-                                            @foreach ($eachstrand as $student)
-                                                @if (strtolower($student->gender) == 'male')
+                                            <?php $__currentLoopData = $eachstrand; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $student): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <?php if(strtolower($student->gender) == 'male'): ?>
                                                     <li
-                                                        style="display: list-item;list-style: decimal; list-style-position: inside; @if ($student->studstatus == 3 || $student->studstatus == 5) text-decoration: line-through @endif">
-                                                        {{ $student->lastname }}, {{ $student->firstname }}
-                                                        {{ $student->middlename }} @if ($student->studstatus == 3 || $student->studstatus == 5)
-                                                            {{ DB::table('studentstatus')->where('id', $student->studstatus)->first()->description }}
-                                                            @endif @if (strtolower(DB::table('schoolinfo')->first()->abbreviation) == 'hc babak')
-                                                                @if ($esc == 1)
-                                                                    @if (strtolower($student->granteedesc) == 'esc')
+                                                        style="display: list-item;list-style: decimal; list-style-position: inside; <?php if($student->studstatus == 3 || $student->studstatus == 5): ?> text-decoration: line-through <?php endif; ?>">
+                                                        <?php echo e($student->lastname); ?>, <?php echo e($student->firstname); ?>
+
+                                                        <?php echo e($student->middlename); ?> <?php if($student->studstatus == 3 || $student->studstatus == 5): ?>
+                                                            <?php echo e(DB::table('studentstatus')->where('id', $student->studstatus)->first()->description); ?>
+
+                                                            <?php endif; ?> <?php if(strtolower(DB::table('schoolinfo')->first()->abbreviation) == 'hc babak'): ?>
+                                                                <?php if($esc == 1): ?>
+                                                                    <?php if(strtolower($student->granteedesc) == 'esc'): ?>
                                                                         - <button type="button"
                                                                             class="btn btn-sm btn-default btn-each-esccert"
-                                                                            data-id="{{ $student->id }}"><i
+                                                                            data-id="<?php echo e($student->id); ?>"><i
                                                                                 class="fa fa-file-pdf text-secondary"></i></button>
-                                                                    @endif
-                                                                @endif
-                                                            @endif
+                                                                    <?php endif; ?>
+                                                                <?php endif; ?>
+                                                            <?php endif; ?>
                                                     </li>
-                                                @endif
-                                            @endforeach
+                                                <?php endif; ?>
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         </ol>
                                     </div>
                                     <div class="col-md-6">
                                         <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FEMALE</label>
                                         <ol>
-                                            @foreach ($eachstrand as $student)
-                                                @if (strtolower($student->gender) == 'female')
+                                            <?php $__currentLoopData = $eachstrand; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $student): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <?php if(strtolower($student->gender) == 'female'): ?>
                                                     <li
-                                                        style="display: list-item;list-style: decimal; list-style-position: inside; @if ($student->studstatus == 3 || $student->studstatus == 5) text-decoration: line-through @endif">
-                                                        {{ $student->lastname }}, {{ $student->firstname }}
-                                                        {{ $student->middlename }} @if ($student->studstatus == 3 || $student->studstatus == 5)
-                                                            {{ DB::table('studentstatus')->where('id', $student->studstatus)->first()->description }}
-                                                            @endif @if (strtolower(DB::table('schoolinfo')->first()->abbreviation) == 'hc babak')
-                                                                @if ($esc == 1)
-                                                                    @if (strtolower($student->granteedesc) == 'esc')
+                                                        style="display: list-item;list-style: decimal; list-style-position: inside; <?php if($student->studstatus == 3 || $student->studstatus == 5): ?> text-decoration: line-through <?php endif; ?>">
+                                                        <?php echo e($student->lastname); ?>, <?php echo e($student->firstname); ?>
+
+                                                        <?php echo e($student->middlename); ?> <?php if($student->studstatus == 3 || $student->studstatus == 5): ?>
+                                                            <?php echo e(DB::table('studentstatus')->where('id', $student->studstatus)->first()->description); ?>
+
+                                                            <?php endif; ?> <?php if(strtolower(DB::table('schoolinfo')->first()->abbreviation) == 'hc babak'): ?>
+                                                                <?php if($esc == 1): ?>
+                                                                    <?php if(strtolower($student->granteedesc) == 'esc'): ?>
                                                                         - <button type="button"
                                                                             class="btn btn-sm btn-default btn-each-esccert"
-                                                                            data-id="{{ $student->id }}"><i
+                                                                            data-id="<?php echo e($student->id); ?>"><i
                                                                                 class="fa fa-file-pdf text-secondary"></i></button>
-                                                                    @endif
-                                                                @endif
-                                                            @endif
+                                                                    <?php endif; ?>
+                                                                <?php endif; ?>
+                                                            <?php endif; ?>
                                                     </li>
-                                                @endif
-                                            @endforeach
+                                                <?php endif; ?>
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         </ol>
                                     </div>
                                 </div>
                                 <hr />
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </div>
-                    @endif
+                    <?php endif; ?>
                 </div>
             </div>
-        @endif
+        <?php endif; ?>
         <!-- /.card-body -->
     </div>
-@elseif($acadprogid == 5)
-    @php
+<?php elseif($acadprogid == 5): ?>
+    <?php
         $strands = collect($students)->groupBy('strandcode');
-    @endphp
+    ?>
     <div class="card card-success card-eachsection">
         <div class="card-header">
             <div class="row">
                 <div class="col-12">
                     <div class="icheck-primary d-inline">
                         <input type="checkbox" id="checkboxesc" name="escCheck"
-                            @if ($esc > 0) value="1" checked @else value="0" @endif>
+                            <?php if($esc > 0): ?> value="1" checked <?php else: ?> value="0" <?php endif; ?>>
                         <label for="checkboxesc">
                             ESC Grantee
                         </label>
@@ -242,34 +246,34 @@
                 </div>
             </div>
         </div>
-        @if (count($students) == 0)
+        <?php if(count($students) == 0): ?>
             <div class="alert alert-primary" role="alert">
                 No students enrolled!
             </div>
-        @else
+        <?php else: ?>
             <div class="card-body">
                 <div class="row">
-                    @if (count($students) == 0)
+                    <?php if(count($students) == 0): ?>
                         <div class="col-md-12">
                             <div class="alert alert-primary" role="alert">
                                 No students enrolled!
                             </div>
                         </div>
-                    @else
+                    <?php else: ?>
                         <div class="col-md-12 mb-2 text-right">
-                            @if (strtolower(DB::table('schoolinfo')->first()->abbreviation) == 'gbbc' ||
-                                    strtolower(DB::table('schoolinfo')->first()->abbreviation) == 'sbc')
+                            <?php if(strtolower(DB::table('schoolinfo')->first()->abbreviation) == 'gbbc' ||
+                                    strtolower(DB::table('schoolinfo')->first()->abbreviation) == 'sbc'): ?>
                                 <form
-                                    action="/reports_studentmasterlist/print/{{ $syid }}/{{ $sectionid }}"
+                                    action="/reports_studentmasterlist/print/<?php echo e($syid); ?>/<?php echo e($sectionid); ?>"
                                     target="_blank" id="exportform" class="m-0 p-0">
                                     <input type="hidden" name="exporttype" id="exporttype" />
-                                    <input type="hidden" name="levelid" value="{{ $levelid }}" />
-                                    <input type="hidden" name="semid" value="{{ $semid }}" />
-                                    <input type="hidden" name="syid" value="{{ $syid }}" />
-                                    <input type="hidden" name="collegeid" value="{{ $collegeid }}" />
-                                    <input type="hidden" name="courseid" value="{{ $courseid }}" />
-                                    <input type="hidden" name="sectionid" value="{{ $sectionid }}" />
-                                    <input type="hidden" name="acadprogid" value="{{ $acadprogid }}" />
+                                    <input type="hidden" name="levelid" value="<?php echo e($levelid); ?>" />
+                                    <input type="hidden" name="semid" value="<?php echo e($semid); ?>" />
+                                    <input type="hidden" name="syid" value="<?php echo e($syid); ?>" />
+                                    <input type="hidden" name="collegeid" value="<?php echo e($collegeid); ?>" />
+                                    <input type="hidden" name="courseid" value="<?php echo e($courseid); ?>" />
+                                    <input type="hidden" name="sectionid" value="<?php echo e($sectionid); ?>" />
+                                    <input type="hidden" name="acadprogid" value="<?php echo e($acadprogid); ?>" />
                                     <div class="row">
                                         <div class="col-md-4">
                                             <select class="form-control form-control-sm" name="format">
@@ -286,20 +290,20 @@
                                                 id="exportexcellist">Export to EXCEL (LIST)</button>
                                         </div>
                                     </div>
-                                    <input type="hidden" value="{{ $esc }}" name="esc" />
+                                    <input type="hidden" value="<?php echo e($esc); ?>" name="esc" />
                                 </form>
-                            @else
+                            <?php else: ?>
                                 <form
-                                    action="/reports_studentmasterlist/print/{{ $syid }}/{{ $sectionid }}"
+                                    action="/reports_studentmasterlist/print/<?php echo e($syid); ?>/<?php echo e($sectionid); ?>"
                                     target="_blank" id="exportform" class="m-0 p-0">
                                     <input type="hidden" name="exporttype" id="exporttype" />
-                                    <input type="hidden" name="levelid" value="{{ $levelid }}" />
-                                    <input type="hidden" name="semid" value="{{ $semid }}" />
-                                    <input type="hidden" name="syid" value="{{ $syid }}" />
-                                    <input type="hidden" name="collegeid" value="{{ $collegeid }}" />
-                                    <input type="hidden" name="courseid" value="{{ $courseid }}" />
-                                    <input type="hidden" name="sectionid" value="{{ $sectionid }}" />
-                                    <input type="hidden" name="acadprogid" value="{{ $acadprogid }}" />
+                                    <input type="hidden" name="levelid" value="<?php echo e($levelid); ?>" />
+                                    <input type="hidden" name="semid" value="<?php echo e($semid); ?>" />
+                                    <input type="hidden" name="syid" value="<?php echo e($syid); ?>" />
+                                    <input type="hidden" name="collegeid" value="<?php echo e($collegeid); ?>" />
+                                    <input type="hidden" name="courseid" value="<?php echo e($courseid); ?>" />
+                                    <input type="hidden" name="sectionid" value="<?php echo e($sectionid); ?>" />
+                                    <input type="hidden" name="acadprogid" value="<?php echo e($acadprogid); ?>" />
                                     <div class="row">
                                         <div class="col-md-3 text-left">
                                             <select class="form-control form-control-sm" name="format">
@@ -314,149 +318,121 @@
                                                 id="exportexcel">Export to EXCEL</button>
                                         </div>
                                         <div class="col-md-5">
-                                            @if (strtolower(DB::table('schoolinfo')->first()->abbreviation) == 'hccsi')
+                                            <?php if(strtolower(DB::table('schoolinfo')->first()->abbreviation) == 'hccsi'): ?>
                                                 <button type="button" class="btn btn-default btn-sm btn-export"
                                                     id="exportexcelinfo">Export to EXCEL (LIST)</button>
                                                 <button type="button" class="btn btn-default btn-sm btn-export"
                                                     id="exportexcellist">Export to EXCEL (INFO)</button>
-                                            @else
+                                            <?php else: ?>
                                                 <button type="button" class="btn btn-default btn-sm btn-export"
                                                     id="exportexcelinfo">Export to EXCEL (INFO)</button>
                                                 <button type="button" class="btn btn-default btn-sm btn-export"
                                                     id="exportexcellist">Export to EXCEL (LIST)</button>
-                                            @endif
+                                            <?php endif; ?>
                                         </div>
                                     </div>
-                                    <input type="hidden" value="{{ $esc }}" name="esc" />
+                                    <input type="hidden" value="<?php echo e($esc); ?>" name="esc" />
                                 </form>
-                            @endif
-                            {{-- <button type="button" class="btn btn-default btn-sm btn-exportpdf">Export to PDF</button> --}}
+                            <?php endif; ?>
+                            
                         </div>
 
                         <div class="col-md-12">
-                            @foreach ($strands as $key => $eachstrand)
+                            <?php $__currentLoopData = $strands; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $eachstrand): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <h5>{{ $key }}</h5>
+                                        <h5><?php echo e($key); ?></h5>
                                     </div>
                                     <div class="col-md-6">
                                         <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MALE</label>
                                         <ol>
-                                            @foreach ($eachstrand as $student)
-                                                @if (strtolower($student->gender) == 'male')
+                                            <?php $__currentLoopData = $eachstrand; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $student): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <?php if(strtolower($student->gender) == 'male'): ?>
                                                     <li
-                                                        style="display: list-item;list-style: decimal; list-style-position: inside; @if ($student->studstatus == 3 || $student->studstatus == 5) text-decoration: line-through @endif">
-                                                        {{ $student->lastname }}, {{ $student->firstname }}
-                                                        {{ $student->middlename }} @if ($student->studstatus == 3 || $student->studstatus == 5)
-                                                            {{ DB::table('studentstatus')->where('id', $student->studstatus)->first()->description }}
-                                                            @endif @if (strtolower(DB::table('schoolinfo')->first()->abbreviation) == 'hc babak')
-                                                                @if ($esc == 1)
-                                                                    @if (strtolower($student->granteedesc) == 'esc')
+                                                        style="display: list-item;list-style: decimal; list-style-position: inside; <?php if($student->studstatus == 3 || $student->studstatus == 5): ?> text-decoration: line-through <?php endif; ?>">
+                                                        <?php echo e($student->lastname); ?>, <?php echo e($student->firstname); ?>
+
+                                                        <?php echo e($student->middlename); ?> <?php if($student->studstatus == 3 || $student->studstatus == 5): ?>
+                                                            <?php echo e(DB::table('studentstatus')->where('id', $student->studstatus)->first()->description); ?>
+
+                                                            <?php endif; ?> <?php if(strtolower(DB::table('schoolinfo')->first()->abbreviation) == 'hc babak'): ?>
+                                                                <?php if($esc == 1): ?>
+                                                                    <?php if(strtolower($student->granteedesc) == 'esc'): ?>
                                                                         - <button type="button"
                                                                             class="btn btn-sm btn-default btn-each-esccert"
-                                                                            data-id="{{ $student->id }}"><i
+                                                                            data-id="<?php echo e($student->id); ?>"><i
                                                                                 class="fa fa-file-pdf text-secondary"></i></button>
-                                                                    @endif
-                                                                @endif
-                                                            @endif
+                                                                    <?php endif; ?>
+                                                                <?php endif; ?>
+                                                            <?php endif; ?>
                                                     </li>
-                                                @endif
-                                            @endforeach
+                                                <?php endif; ?>
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         </ol>
                                     </div>
                                     <div class="col-md-6">
                                         <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FEMALE</label>
                                         <ol>
-                                            @foreach ($eachstrand as $student)
-                                                @if (strtolower($student->gender) == 'female')
+                                            <?php $__currentLoopData = $eachstrand; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $student): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <?php if(strtolower($student->gender) == 'female'): ?>
                                                     <li
-                                                        style="display: list-item;list-style: decimal; list-style-position: inside; @if ($student->studstatus == 3 || $student->studstatus == 5) text-decoration: line-through @endif">
-                                                        {{ $student->lastname }}, {{ $student->firstname }}
-                                                        {{ $student->middlename }} @if ($student->studstatus == 3 || $student->studstatus == 5)
-                                                            {{ DB::table('studentstatus')->where('id', $student->studstatus)->first()->description }}
-                                                            @endif @if (strtolower(DB::table('schoolinfo')->first()->abbreviation) == 'hc babak')
-                                                                @if ($esc == 1)
-                                                                    @if (strtolower($student->granteedesc) == 'esc')
+                                                        style="display: list-item;list-style: decimal; list-style-position: inside; <?php if($student->studstatus == 3 || $student->studstatus == 5): ?> text-decoration: line-through <?php endif; ?>">
+                                                        <?php echo e($student->lastname); ?>, <?php echo e($student->firstname); ?>
+
+                                                        <?php echo e($student->middlename); ?> <?php if($student->studstatus == 3 || $student->studstatus == 5): ?>
+                                                            <?php echo e(DB::table('studentstatus')->where('id', $student->studstatus)->first()->description); ?>
+
+                                                            <?php endif; ?> <?php if(strtolower(DB::table('schoolinfo')->first()->abbreviation) == 'hc babak'): ?>
+                                                                <?php if($esc == 1): ?>
+                                                                    <?php if(strtolower($student->granteedesc) == 'esc'): ?>
                                                                         - <button type="button"
                                                                             class="btn btn-sm btn-default btn-each-esccert"
-                                                                            data-id="{{ $student->id }}"><i
+                                                                            data-id="<?php echo e($student->id); ?>"><i
                                                                                 class="fa fa-file-pdf text-secondary"></i></button>
-                                                                    @endif
-                                                                @endif
-                                                            @endif
+                                                                    <?php endif; ?>
+                                                                <?php endif; ?>
+                                                            <?php endif; ?>
                                                     </li>
-                                                @endif
-                                            @endforeach
+                                                <?php endif; ?>
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         </ol>
                                     </div>
                                 </div>
                                 <hr />
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </div>
-                    @endif
+                    <?php endif; ?>
                 </div>
             </div>
-        @endif
+        <?php endif; ?>
         <!-- /.card-body -->
     </div>
-@else
-    {{-- @if ($esc == 1)
-    <div class="card">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-6">
-                    <em class="text-danger">Note: Please separate per paragraph</em>
-                </div>
-                <div class="col-6 text-right">
-                    <button type="button" class="btn btn-sm btn-outline-primary" id="btn-addnew-note">Add New Note</button>
-                </div>
-            </div>
-            <div id="container-notes"></div>
-        </div>
-    </div>
-    @endif --}}
+<?php else: ?>
+    
     <div class="card card-success card-eachsection">
-        {{-- @if ($esc == 1)
-        <div class="card-header">
-            <div class="row">
-                <div class="col-6">
-                    <em class="text-danger">Note: Please separate per paragraph</em>
-                    <div class="icheck-primary d-inline">
-                        <input type="checkbox" id="checkboxesc" name="escCheck" @if ($esc > 0) value="1" checked @else value="0" @endif>
-                        <label for="checkboxesc">
-                            ESC Grantee
-                        </label>
-                    </div>
-                </div>
-                <div class="col-6 text-right">
-                    <button type="button" class="btn btn-sm btn-outline-primary" id="btn-addnew-note">Add New Note</button>
-                </div>
-            </div>
-            <div id="container-notes"></div>
-        </div>
-        @endif --}}
+        
         <div class="card-body">
             <div class="row">
-                @if (count($students) == 0)
+                <?php if(count($students) == 0): ?>
                     <div class="col-md-12">
                         <div class="alert alert-primary" role="alert">
                             No students enrolled!
                         </div>
                     </div>
-                @else
+                <?php else: ?>
                     <div class="col-md-12 mb-2 text-right">
-                        @if (strtolower(DB::table('schoolinfo')->first()->abbreviation) == 'gbbc' ||
-                                strtolower(DB::table('schoolinfo')->first()->abbreviation) == 'sbc')
-                            <form action="/reports_studentmasterlist/print/{{ $syid }}/{{ $sectionid }}"
+                        <?php if(strtolower(DB::table('schoolinfo')->first()->abbreviation) == 'gbbc' ||
+                                strtolower(DB::table('schoolinfo')->first()->abbreviation) == 'sbc'): ?>
+                            <form action="/reports_studentmasterlist/print/<?php echo e($syid); ?>/<?php echo e($sectionid); ?>"
                                 target="_blank" id="exportform" class="m-0 p-0">
                                 <input type="hidden" name="exporttype" id="exporttype" />
-                                <input type="hidden" name="levelid" value="{{ $levelid }}" />
-                                <input type="hidden" name="semid" value="{{ $semid }}" />
-                                <input type="hidden" name="syid" value="{{ $syid }}" />
-                                <input type="hidden" name="collegeid" value="{{ $collegeid }}" />
-                                <input type="hidden" name="courseid" value="{{ $courseid }}" />
-                                <input type="hidden" name="sectionid" value="{{ $sectionid }}" />
-                                <input type="hidden" name="acadprogid" value="{{ $acadprogid }}" />
+                                <input type="hidden" name="levelid" value="<?php echo e($levelid); ?>" />
+                                <input type="hidden" name="semid" value="<?php echo e($semid); ?>" />
+                                <input type="hidden" name="syid" value="<?php echo e($syid); ?>" />
+                                <input type="hidden" name="collegeid" value="<?php echo e($collegeid); ?>" />
+                                <input type="hidden" name="courseid" value="<?php echo e($courseid); ?>" />
+                                <input type="hidden" name="sectionid" value="<?php echo e($sectionid); ?>" />
+                                <input type="hidden" name="acadprogid" value="<?php echo e($acadprogid); ?>" />
                                 <div class="row">
                                     <div class="col-md-4">
                                         <select class="form-control form-control-sm" name="format">
@@ -473,19 +449,19 @@
                                             id="exportexcellist">Export to EXCEL (LIST)</button>
                                     </div>
                                 </div>
-                                <input type="hidden" value="{{ $esc }}" name="esc" />
+                                <input type="hidden" value="<?php echo e($esc); ?>" name="esc" />
                             </form>
-                        @else
-                            <form action="/reports_studentmasterlist/print/{{ $syid }}/{{ $sectionid }}"
+                        <?php else: ?>
+                            <form action="/reports_studentmasterlist/print/<?php echo e($syid); ?>/<?php echo e($sectionid); ?>"
                                 target="_blank" id="exportform" class="m-0 p-0">
                                 <input type="hidden" name="exporttype" id="exporttype" />
-                                <input type="hidden" name="levelid" value="{{ $levelid }}" />
-                                <input type="hidden" name="semid" value="{{ $semid }}" />
-                                <input type="hidden" name="syid" value="{{ $syid }}" />
-                                <input type="hidden" name="collegeid" value="{{ $collegeid }}" />
-                                <input type="hidden" name="courseid" value="{{ $courseid }}" />
-                                <input type="hidden" name="sectionid" value="{{ $sectionid }}" />
-                                <input type="hidden" name="acadprogid" value="{{ $acadprogid }}" />
+                                <input type="hidden" name="levelid" value="<?php echo e($levelid); ?>" />
+                                <input type="hidden" name="semid" value="<?php echo e($semid); ?>" />
+                                <input type="hidden" name="syid" value="<?php echo e($syid); ?>" />
+                                <input type="hidden" name="collegeid" value="<?php echo e($collegeid); ?>" />
+                                <input type="hidden" name="courseid" value="<?php echo e($courseid); ?>" />
+                                <input type="hidden" name="sectionid" value="<?php echo e($sectionid); ?>" />
+                                <input type="hidden" name="acadprogid" value="<?php echo e($acadprogid); ?>" />
                                 <div class="row">
                                     <div class="col-md-3 text-left">
                                         <select class="form-control form-control-sm" name="format">
@@ -500,80 +476,84 @@
                                             id="exportexcel">Export to EXCEL</button>
                                     </div>
                                     <div class="col-md-5">
-                                        @if (strtolower(DB::table('schoolinfo')->first()->abbreviation) == 'hccsi')
+                                        <?php if(strtolower(DB::table('schoolinfo')->first()->abbreviation) == 'hccsi'): ?>
                                             <button type="button" class="btn btn-default btn-sm btn-export"
                                                 id="exportexcelinfo">Export to EXCEL (LIST)</button>
                                             <button type="button" class="btn btn-default btn-sm btn-export"
                                                 id="exportexcellist">Export to EXCEL (INFO)</button>
-                                        @else
+                                        <?php else: ?>
                                             <button type="button" class="btn btn-default btn-sm btn-export"
                                                 id="exportexcelinfo">Export to EXCEL (INFO)</button>
                                             <button type="button" class="btn btn-default btn-sm btn-export"
                                                 id="exportexcellist">Export to EXCEL (LIST)</button>
-                                        @endif
+                                        <?php endif; ?>
                                     </div>
                                 </div>
-                                <input type="hidden" value="{{ $esc }}" name="esc" />
+                                <input type="hidden" value="<?php echo e($esc); ?>" name="esc" />
                             </form>
-                        @endif
-                        {{-- <button type="button" class="btn btn-default btn-sm btn-exportpdf">Export to PDF</button> --}}
+                        <?php endif; ?>
+                        
                     </div>
                     <div class="col-md-6">
                         <label>MALE</label>
                         <ol>
-                            @foreach ($students as $student)
-                                @if (strtolower($student->gender) == 'male')
+                            <?php $__currentLoopData = $students; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $student): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <?php if(strtolower($student->gender) == 'male'): ?>
                                     <li
-                                        style="display: list-item;list-style: decimal; list-style-position: inside; @if ($student->studstatus == 3 || $student->studstatus == 5) text-decoration: line-through @endif">
-                                        {{ $student->lastname }}, {{ $student->firstname }}
-                                        {{ $student->middlename }} @if ($student->studstatus == 3 || $student->studstatus == 5)
-                                            {{ DB::table('studentstatus')->where('id', $student->studstatus)->first()->description }}
-                                            @endif @if (strtolower(DB::table('schoolinfo')->first()->abbreviation) == 'hc babak')
-                                                @if ($esc == 1)
-                                                    @if (strtolower($student->granteedesc) == 'esc')
+                                        style="display: list-item;list-style: decimal; list-style-position: inside; <?php if($student->studstatus == 3 || $student->studstatus == 5): ?> text-decoration: line-through <?php endif; ?>">
+                                        <?php echo e($student->lastname); ?>, <?php echo e($student->firstname); ?>
+
+                                        <?php echo e($student->middlename); ?> <?php if($student->studstatus == 3 || $student->studstatus == 5): ?>
+                                            <?php echo e(DB::table('studentstatus')->where('id', $student->studstatus)->first()->description); ?>
+
+                                            <?php endif; ?> <?php if(strtolower(DB::table('schoolinfo')->first()->abbreviation) == 'hc babak'): ?>
+                                                <?php if($esc == 1): ?>
+                                                    <?php if(strtolower($student->granteedesc) == 'esc'): ?>
                                                         - <button type="button"
                                                             class="btn btn-sm btn-default btn-each-esccert"
-                                                            data-id="{{ $student->id }}"><i
+                                                            data-id="<?php echo e($student->id); ?>"><i
                                                                 class="fa fa-file-pdf text-secondary"></i></button>
-                                                    @endif
-                                                @endif
-                                            @endif
+                                                    <?php endif; ?>
+                                                <?php endif; ?>
+                                            <?php endif; ?>
                                     </li>
-                                @endif
-                            @endforeach
+                                <?php endif; ?>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </ol>
                     </div>
                     <div class="col-md-6">
                         <label>FEMALE</label>
                         <ol>
-                            @foreach ($students as $student)
-                                @if (strtolower($student->gender) == 'female')
+                            <?php $__currentLoopData = $students; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $student): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <?php if(strtolower($student->gender) == 'female'): ?>
                                     <li
-                                        style="display: list-item;list-style: decimal; list-style-position: inside; @if ($student->studstatus == 3 || $student->studstatus == 5) text-decoration: line-through @endif">
-                                        {{ $student->lastname }}, {{ $student->firstname }}
-                                        {{ $student->middlename }} @if ($student->studstatus == 3 || $student->studstatus == 5)
-                                            {{ DB::table('studentstatus')->where('id', $student->studstatus)->first()->description }}
-                                            @endif @if (strtolower(DB::table('schoolinfo')->first()->abbreviation) == 'hc babak')
-                                                @if ($esc == 1)
-                                                    @if (strtolower($student->granteedesc) == 'esc')
+                                        style="display: list-item;list-style: decimal; list-style-position: inside; <?php if($student->studstatus == 3 || $student->studstatus == 5): ?> text-decoration: line-through <?php endif; ?>">
+                                        <?php echo e($student->lastname); ?>, <?php echo e($student->firstname); ?>
+
+                                        <?php echo e($student->middlename); ?> <?php if($student->studstatus == 3 || $student->studstatus == 5): ?>
+                                            <?php echo e(DB::table('studentstatus')->where('id', $student->studstatus)->first()->description); ?>
+
+                                            <?php endif; ?> <?php if(strtolower(DB::table('schoolinfo')->first()->abbreviation) == 'hc babak'): ?>
+                                                <?php if($esc == 1): ?>
+                                                    <?php if(strtolower($student->granteedesc) == 'esc'): ?>
                                                         - <button type="button"
                                                             class="btn btn-sm btn-default btn-each-esccert"
-                                                            data-id="{{ $student->id }}"><i
+                                                            data-id="<?php echo e($student->id); ?>"><i
                                                                 class="fa fa-file-pdf text-secondary"></i></button>
-                                                    @endif
-                                                @endif
-                                            @endif
+                                                    <?php endif; ?>
+                                                <?php endif; ?>
+                                            <?php endif; ?>
                                     </li>
-                                @endif
-                            @endforeach
+                                <?php endif; ?>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </ol>
                     </div>
-                @endif
+                <?php endif; ?>
             </div>
         </div>
         <!-- /.card-body -->
     </div>
-@endif
+<?php endif; ?>
 <script>
     $('#btn-addnew-note').on('click', function() {
         $('#container-notes').append(
@@ -582,3 +562,4 @@
         )
     })
 </script>
+<?php /**PATH C:\laragon\www\es_ldcu2\resources\views/registrar/forms/masterlist/students.blade.php ENDPATH**/ ?>
