@@ -529,7 +529,8 @@ class GeneralController extends Controller
         if ($username != 'Not Found') {
             $student_email = $contact->semail ?? $contact->email ?? null;
 
-            if ($student_email) {
+            $schoolinfo = DB::table('schoolinfo')->first();
+            if ($student_email && isset($schoolinfo->withEmailer) && $schoolinfo->withEmailer == 1) {
                 $data = [
                     'fullname' => trim(($contact->firstname ?? '') . ' ' . ($contact->middlename ?? '') . ' ' . ($contact->lastname ?? '') . ' ' . ($contact->suffix ?? '')),
                     'username' => $username,

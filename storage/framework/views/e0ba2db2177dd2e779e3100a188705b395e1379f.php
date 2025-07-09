@@ -1,9 +1,7 @@
-@extends('superadmin.layouts.app2')
-
-@section('pagespecificscripts')
-    <link rel="stylesheet" href="{{ asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.css') }}">
-    <script src="{{ asset('plugins/bootstrap-switch/js/bootstrap-switch.min.js') }}"></script>
+<?php $__env->startSection('pagespecificscripts'); ?>
+    <link rel="stylesheet" href="<?php echo e(asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css')); ?>">
+    <link rel="stylesheet" href="<?php echo e(asset('plugins/summernote/summernote-bs4.css')); ?>">
+    <script src="<?php echo e(asset('plugins/bootstrap-switch/js/bootstrap-switch.min.js')); ?>"></script>
     <style>
         .dropdown-toggle::after {
             display: none;
@@ -21,9 +19,9 @@
             border: 0;
         }
     </style>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
     <section class="content-header">
         <div class="container-fluid">
             <div class="row">
@@ -50,14 +48,14 @@
                                 <div class="col-md-12">
                                     <div>
                                         <label for="">Database name</label>
-                                        <input class="form-control form-control-sm" readonly value="{{ $databasename }}">
+                                        <input class="form-control form-control-sm" readonly value="<?php echo e($databasename); ?>">
                                     </div>
                                 </div>
                             </div>
                             <hr>
-                            <form action="{{ isset($schoolinfo) ? '/updateschoolinfo' : '/insertinfo' }}" id="update_info"
+                            <form action="<?php echo e(isset($schoolinfo) ? '/updateschoolinfo' : '/insertinfo'); ?>" id="update_info"
                                 method="POST" enctype="multipart/form-data">
-                                @csrf
+                                <?php echo csrf_field(); ?>
                                 <div class="row">
                                     <div class="col-md-9">
 
@@ -66,46 +64,46 @@
                                                 <label for="">School Email</label>
                                                 <input type="email" name="schoolemail"
                                                     class="form-control form-control-sm"
-                                                    value="{{ $schoolinfo->schoolemail }}">
+                                                    value="<?php echo e($schoolinfo->schoolemail); ?>">
                                             </div>
                                             <div class="form-group col-md-2">
                                                 <label for="">School ID</label>
                                                 <input name="schoolid" class="form-control form-control-sm"
-                                                    value="{{ $schoolinfo->schoolid }}">
+                                                    value="<?php echo e($schoolinfo->schoolid); ?>">
                                             </div>
                                             <div class="form-group col-md-2">
                                                 <label for="">Abbreviation</label>
                                                 <input name="abbreviation" class="form-control form-control-sm"
-                                                    value="{{ $schoolinfo->abbreviation }}">
+                                                    value="<?php echo e($schoolinfo->abbreviation); ?>">
                                             </div>
                                             <div class="form-group col-md-8">
                                                 <label for="">School Name</label>
                                                 <input name="schoolname" class="form-control form-control-sm"
-                                                    value="{{ $schoolinfo->schoolname }}">
+                                                    value="<?php echo e($schoolinfo->schoolname); ?>">
                                             </div>
                                             <div class="form-group col-md-4">
                                                 <label for="">School Region</label>
                                                 <input name="region" class="form-control form-control-sm"
-                                                    value="{{ $schoolinfo->regiontext }}">
+                                                    value="<?php echo e($schoolinfo->regiontext); ?>">
                                             </div>
                                             <div class="form-group col-md-4">
                                                 <label for="">School Division</label>
                                                 <input name="division" class="form-control form-control-sm"
-                                                    value="{{ $schoolinfo->divisiontext }}">
+                                                    value="<?php echo e($schoolinfo->divisiontext); ?>">
                                             </div>
                                             <div class="form-group col-md-4">
                                                 <label for="">School District</label>
                                                 <input name="district" class="form-control form-control-sm"
-                                                    value="{{ $schoolinfo->districttext }}">
+                                                    value="<?php echo e($schoolinfo->districttext); ?>">
                                             </div>
                                             <div class="form-group col-md-12">
                                                 <label for="">School Address</label>
                                                 <input name="address" class="form-control form-control-sm"
-                                                    value="{{ $schoolinfo->address }}">
+                                                    value="<?php echo e($schoolinfo->address); ?>">
                                             </div>
                                             <div class="form-group col-md-12 ">
                                                 <label for="">School Tagline</label>
-                                                <textarea name="schooltagline" class="form-control text-area" rows="3">{{ $schoolinfo->tagline }}</textarea>
+                                                <textarea name="schooltagline" class="form-control text-area" rows="3"><?php echo e($schoolinfo->tagline); ?></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -113,20 +111,27 @@
                                         <div class="form-group">
                                             <label for=""><b>School Logo</b></label>
                                             <input type="file" name="schoollogo" id="schoollogo"
-                                                class="form-control @error('schoollogo') is-invalid @enderror">
-                                            @if ($errors->has('schoollogo'))
+                                                class="form-control <?php $__errorArgs = ['schoollogo'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>">
+                                            <?php if($errors->has('schoollogo')): ?>
                                                 <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $errors->first('schoollogo') }}</strong>
+                                                    <strong><?php echo e($errors->first('schoollogo')); ?></strong>
                                                 </span>
-                                            @endif
+                                            <?php endif; ?>
                                         </div>
-                                        @if (isset($schoolinfo->picurl))
-                                            <img id="logoDisplay" src="{{ asset($schoolinfo->picurl) }}" alt=""
+                                        <?php if(isset($schoolinfo->picurl)): ?>
+                                            <img id="logoDisplay" src="<?php echo e(asset($schoolinfo->picurl)); ?>" alt=""
                                                 class="w-100">
-                                        @else
-                                            <img id="logoDisplay" src="{{ asset($schoolinfo->picurl) }}" alt=""
+                                        <?php else: ?>
+                                            <img id="logoDisplay" src="<?php echo e(asset($schoolinfo->picurl)); ?>" alt=""
                                                 class="w-100">
-                                        @endif
+                                        <?php endif; ?>
                                     </div>
 
                                     <div class="col-md-12">
@@ -183,12 +188,7 @@
                                     <input type="checkbox" name="teachereval" class="update_module"
                                         data-bootstrap-switch>
                                 </div>
-                                {{-- <div class=" col-md-2">
-                                    <label for="">Accounting</label>
-                                    <br>
-                                    <input type="checkbox" name="accountingmodule" class="update_module"
-                                        data-bootstrap-switch>
-                                </div> --}}
+                                
                                 <div class=" col-md-2">
                                     <label for="">Teacher SF10</label>
                                     <br>
@@ -236,7 +236,7 @@
                                     </label>
                                     <div class="col-md-9 p-0 input-group">
                                         <input class="form-control " id="password" placeholder="Admin IT Password"
-                                            value="{{ isset(collect($admin_pass)->where('type', 6)->first()->passwordstr) ? collect($admin_pass)->where('type', 6)->first()->passwordstr : '' }}">
+                                            value="<?php echo e(isset(collect($admin_pass)->where('type', 6)->first()->passwordstr) ? collect($admin_pass)->where('type', 6)->first()->passwordstr : ''); ?>">
                                         <span class="input-group-append">
                                             <button type="button" class="btn btn-primary btn-sm update_adminpass"
                                                 date-id="6" id="generateAdmin"><i class="far fa-edit"></i>
@@ -251,7 +251,7 @@
                                     <div class="col-md-9 p-0 input-group">
                                         <input class="form-control " id="adminadmin_password"
                                             placeholder="Admin IT Password"
-                                            value="{{ isset(collect($admin_pass)->where('type', 12)->first()->passwordstr) ? collect($admin_pass)->where('type', 12)->first()->passwordstr : '' }}">
+                                            value="<?php echo e(isset(collect($admin_pass)->where('type', 12)->first()->passwordstr) ? collect($admin_pass)->where('type', 12)->first()->passwordstr : ''); ?>">
                                         <span class="input-group-append">
                                             <button type="button" class="btn btn-primary btn-sm update_adminpass"
                                                 id="generateAdminAdmin"><i class="far fa-edit"></i> GENERATE</button>
@@ -263,7 +263,7 @@
                                     <label for="inputEmail3" class="col-md-3 col-form-label">School Color</label>
                                     <div class="input-group col-md-9 p-0">
                                         <input class="form-control"
-                                            name="schoolcolor"value="{{ $schoolinfo->schoolcolor }}">
+                                            name="schoolcolor"value="<?php echo e($schoolinfo->schoolcolor); ?>">
                                         <span class="input-group-append">
                                             <button type="button" class="btn btn-primary btn-sm updateinfo"
                                                 data-id="schoolcolor"><i class="far fa-edit"></i> UPDATE</button>
@@ -275,7 +275,7 @@
                                     <label for="inputEmail3" class="col-md-3 col-form-label">School Website</label>
                                     <div class="input-group col-md-9 p-0">
                                         <input class="form-control" name="schoolwebsite"
-                                            value="{{ $schoolinfo->websitelink }}">
+                                            value="<?php echo e($schoolinfo->websitelink); ?>">
                                         <span class="input-group-append">
                                             <button type="button" class="btn btn-primary btn-sm updateinfo"
                                                 data-id="schoolwebsite"><i class="far fa-edit"></i> UPDATE</button>
@@ -287,7 +287,7 @@
                                     <label for="inputEmail3" class="col-md-3 col-form-label">ES Cloud URL</label>
                                     <div class="input-group col-md-9 p-0">
                                         <input class="form-control" name="escloudurl"
-                                            value="{{ $schoolinfo->es_cloudurl }}">
+                                            value="<?php echo e($schoolinfo->es_cloudurl); ?>">
                                         <span class="input-group-append">
                                             <button type="button" class="btn btn-primary btn-sm updateinfo"
                                                 data-id="escloudurl"><i class="far fa-edit"></i> UPDATE</button>
@@ -298,7 +298,7 @@
                                 <div class="card-body pad p-2 col-md-12">
                                     <label>Terms and Agreements</label>
                                     <div class="mb-3">
-                                        <textarea class="textarea" placeholder="Place some text here" name="schoolterms" 2.>{!! html_entity_decode($schoolinfo->terms) !!}</textarea>
+                                        <textarea class="textarea" placeholder="Place some text here" name="schoolterms" 2.><?php echo html_entity_decode($schoolinfo->terms); ?></textarea>
                                         <button type="button" class="btn btn-primary btn-sm updateinfo"
                                             data-id="schoolterms"><i class="far fa-edit"></i> UPDATE TERMS AND
                                             AGREEMENTS</button>
@@ -311,11 +311,11 @@
                 </div>
             </div>
     </section>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('footerjavascript')
-    <script src="{{ asset('plugins/sweetalert2/sweetalert2.all.min.js') }}"></script>
-    <script src="{{ asset('plugins/summernote/summernote-bs4.min.js') }}"></script>
+<?php $__env->startSection('footerjavascript'); ?>
+    <script src="<?php echo e(asset('plugins/sweetalert2/sweetalert2.all.min.js')); ?>"></script>
+    <script src="<?php echo e(asset('plugins/summernote/summernote-bs4.min.js')); ?>"></script>
 
     <script>
         $(function() {
@@ -380,7 +380,7 @@
                     }
                 })
 
-                // inputs.append('_token', "{{ csrf_token() }}");
+                // inputs.append('_token', "<?php echo e(csrf_token()); ?>");
 
                 // $.ajax( {
 
@@ -399,7 +399,7 @@
     </script>
 
     <script>
-        var schoolinfo = @json($schoolinfo);
+        var schoolinfo = <?php echo json_encode($schoolinfo, 15, 512) ?>;
 
         const Toast = Swal.mixin({
             toast: true,
@@ -608,4 +608,6 @@
 
         })
     </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('superadmin.layouts.app2', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\laragon\www\es_ldcu2\resources\views/superadmin/pages/schoolinfo/viewschoolinfo.blade.php ENDPATH**/ ?>

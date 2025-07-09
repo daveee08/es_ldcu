@@ -10,7 +10,7 @@ use Session;
 
 class SuperAdminController extends \App\Http\Controllers\Controller
 {
- 
+
       public static function updatemodulestatus(Request $request){
             try{
                   $module = $request->get('module');
@@ -22,7 +22,7 @@ class SuperAdminController extends \App\Http\Controllers\Controller
                   return array((object)[
                         'status'=>1,
                         'message'=>'Updated Successfully!'
-                  ]);    
+                  ]);
             }catch(\Exception $e){
                   return self::store_error($e);
             }
@@ -45,7 +45,7 @@ class SuperAdminController extends \App\Http\Controllers\Controller
 
             $schoolinfo = DB::table('schoolinfo')
                               ->first();
-                              
+
             $admin_pass = DB::table('users')
                               ->whereIn('type',[6,12])
                               ->where('deleted',0)

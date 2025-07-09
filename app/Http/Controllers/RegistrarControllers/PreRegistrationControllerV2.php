@@ -438,9 +438,9 @@ class PreRegistrationControllerV2 extends \App\Http\Controllers\Controller
                 'username' => $user->email,
                 'password' => $user->passwordstr,
             ];
-
-            // Send the email
-            Mail::to($request->get('email'))->send(new \App\Mail\Mailer($data));
+            if (isset($schoolinfo->withEmailer) && $schoolinfo->withEmailer == 1) {
+                Mail::to($request->get('email'))->send(new \App\Mail\Mailer($data));
+            }
 
 
             return redirect('/preregistration/get/qcode/' . $sid . '/' . $request->get('last_name') . ', ' . $request->get('first_name') . '/' . 'Pre-registered');

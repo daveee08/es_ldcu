@@ -52,9 +52,12 @@ class StatementofAccountController extends Controller
             ->orderBy('sortid')
             ->get();
 
+        $schoolinfo = DB::table('schoolinfo')->first();
+
         return view('finance.statementofaccount.index')
             ->with('gradelevels', $gradelevels)
             ->with('semesters', $semesters)
+            ->with('schoolinfo', $schoolinfo)
             // ->with('students', $students)
             ->with('schoolyears', $schoolyears)
             ->with('monthsetups', $monthsetups)

@@ -1,13 +1,11 @@
-@extends('finance.layouts.app')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
     <!-- DataTables -->
-    <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.css') }}">
+    <link rel="stylesheet" href="<?php echo e(asset('plugins/datatables-bs4/css/dataTables.bootstrap4.css')); ?>">
     <!-- daterange picker -->
-    <link rel="stylesheet" href="{{ asset('plugins/daterangepicker/daterangepicker.css') }}">
-    <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="<?php echo e(asset('plugins/daterangepicker/daterangepicker.css')); ?>">
+    <link rel="stylesheet" href="<?php echo e(asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')); ?>">
+    <link rel="stylesheet" href="<?php echo e(asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css')); ?>">
+    <link rel="stylesheet" href="<?php echo e(asset('plugins/datatables-buttons/css/buttons.bootstrap4.min.css')); ?>">
     <style>
         table {
             font-size: 12px;
@@ -32,7 +30,7 @@
         </div><!-- /.container-fluid -->
     </section>
 
-    {{-- MODALS --}}
+    
     <div class="modal" tabindex="-1" role="dialog" id="month_range_modal">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -118,9 +116,9 @@
                             <label>Academic Program</label>
                             <select class="form-control form-control-sm" id="select_acadprog">
                                 <option value="">All</option>
-                                @foreach (db::table('academicprogram')->orderBy('progname')->get() as $acadprog)
-                                    <option value="{{ $acadprog->id }}">{{ $acadprog->progname }}</option>
-                                @endforeach
+                                <?php $__currentLoopData = db::table('academicprogram')->orderBy('progname')->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $acadprog): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($acadprog->id); ?>"><?php echo e($acadprog->progname); ?></option>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                         </div>
 
@@ -132,7 +130,7 @@
             </div>
         </div>
     </div>
-    {{-- END MODALS --}}
+    
     <div class="card">
         <div class="card-body">
             <div class="row">
@@ -147,28 +145,28 @@
                 <div class="col-md-2">
                     <label>School Year</label>
                     <select class="form-control form-control-sm" id="selectedschoolyear">
-                        @foreach ($schoolyears as $schoolyear)
-                            <option value="{{ $schoolyear->id }}" {{ $schoolyear->isactive == 1 ? 'selected' : '' }}>
-                                {{ $schoolyear->sydesc }}</option>
-                        @endforeach
+                        <?php $__currentLoopData = $schoolyears; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $schoolyear): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <option value="<?php echo e($schoolyear->id); ?>" <?php echo e($schoolyear->isactive == 1 ? 'selected' : ''); ?>>
+                                <?php echo e($schoolyear->sydesc); ?></option>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </select>
                 </div>
                 <div class="col-md-2">
                     <label>Semester</label>
                     <select class="form-control form-control-sm" id="selectedsemester">
-                        @foreach ($semesters as $semester)
-                            <option value="{{ $semester->id }}" {{ $semester->isactive == 1 ? 'selected' : '' }}>
-                                {{ $semester->semester }}</option>
-                        @endforeach
+                        <?php $__currentLoopData = $semesters; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $semester): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <option value="<?php echo e($semester->id); ?>" <?php echo e($semester->isactive == 1 ? 'selected' : ''); ?>>
+                                <?php echo e($semester->semester); ?></option>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </select>
                 </div>
                 <div class="col-md-2">
                     <label>Grade Level</label>
                     <select class="form-control form-control-sm" id="selectedgradelevel">
                         <option value="0">All</option>
-                        @foreach ($gradelevels as $gradelevel)
-                            <option value="{{ $gradelevel->id }}">{{ $gradelevel->levelname }}</option>
-                        @endforeach
+                        <?php $__currentLoopData = $gradelevels; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $gradelevel): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <option value="<?php echo e($gradelevel->id); ?>"><?php echo e($gradelevel->levelname); ?></option>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </select>
                 </div>
                 <div class="col-md-2 div_section">
@@ -183,45 +181,28 @@
                         <option value="0">All</option>
                     </select>
                 </div>
-                {{-- <div class="col-md-2">
-                <label>Month Range &nbsp;&nbsp; <a href="javascript:void(0)" id="btn_range"><i class="fas fa-sliders-h"></i></a></label>
-                <select class="form-control form-control-sm" id="selectedmonthrange" style="text-transform: uppercase"></select>
-            </div> --}}
+                
                 <div class="col-md-2">
                     <label>Month Setup</label>
                     <select class="form-control form-control-sm" id="selectedmonth">
-                        @for ($i = 1; $i <= 12; $i++)
-                            <option value="{{ $i }}" {{ date('m') == $i ? 'selected' : '' }}>
-                                {{ date('F', mktime(0, 0, 0, $i, 10)) }}</option>
-                        @endfor
+                        <?php for($i = 1; $i <= 12; $i++): ?>
+                            <option value="<?php echo e($i); ?>" <?php echo e(date('m') == $i ? 'selected' : ''); ?>>
+                                <?php echo e(date('F', mktime(0, 0, 0, $i, 10))); ?></option>
+                        <?php endfor; ?>
                     </select>
                 </div>
 
-                {{-- @if (strtolower(DB::table('schoolinfo')->first()->abbreviation) != 'hccsi')
-                <div class="col-md-2">
-                    @if (strtolower(DB::table('schoolinfo')->first()->abbreviation) != 'xai')
-                        @if ($status == 0)
-                            <button type="button" id="viewnote" class="btn btn-sm btn-default float-right btn-block" data-toggle="tooltip" data-placement="left" title="No notes available"> <span style="height: 10px;width: 10px;background-color: red;border-radius: 50%;display: inline-block;"></span> Note (Inactive)</button>
-                        @else
-                            <button type="button" id="viewnote" class="btn btn-sm btn-default float-right btn-block" data-toggle="tooltip" data-placement="left" title="Active"> <span style="height: 10px;width: 10px;background-color: green;border-radius: 50%;display: inline-block;"></span> Note (Active)</button>
-                        @endif
-                    @endif
-                </div>
-            @endif --}}
+                
             </div>
             <div class="row mt-2">
                 <div class="col-md-12 text-right">
-                    @if (isset($schoolinfo->withEmailer) && $schoolinfo->withEmailer == 1)
+                    <?php if(isset($schoolinfo->withEmailer) && $schoolinfo->withEmailer == 1): ?>
                         <button type="button" class="btn btn-success" id="btn-print">Send Email</button>
-                    @endif
+                    <?php endif; ?>
                     <button type="button" class="btn btn-warning" id="btn-notify">Notify SMS</button>
                     <button type="button" class="btn btn-primary" id="btn-generate">Generate</button>
-                    {{-- <button type="button" class="btn btn-default btn-export-all" exporttype="pdf" id="btn-export-all">
-                        <i class="fa fa-file-pdf"></i> Export to PDF
-                    </button> --}}
-                    {{-- <button type="button" class="btn btn-default btn-export-all" exporttype="pdf" id="btn-export-all">
-                        <i class="fa fa-file-pdf"></i> Export to PDF
-                    </button> --}}
+                    
+                    
                 </div>
             </div>
         </div>
@@ -237,12 +218,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    {{-- <div class="col-sm-12">
-                <div class="alert alert-warning alert-dismissible">
-                    <h5><i class="icon fas fa-exclamation-triangle"></i> Alert!</h5>
-                    Currently working on this feature.
-                  </div>
-            </div> --}}
+                    
                     <p><em>This note will be added at the bottom of the report to be followed by the signatories.</em></p>
                     <div class="row" id="notecontainer"></div>
                 </div>
@@ -255,9 +231,9 @@
         </div>
         <!-- /.modal-dialog -->
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('modal')
+<?php $__env->startSection('modal'); ?>
     <div class="modal fade show" id="modal-notify" aria-modal="true" style="padding-right: 17px; display: none;">
         <div class="modal-dialog modal-lg" style="margin-top: 4em">
             <div class="modal-content">
@@ -270,14 +246,7 @@
                 <div class="modal-body">
                     <form class="form-horizontal">
                         <div class="card-body">
-                            {{-- <div class="form-group row">
-                <div class="col-sm-10 input-group">
-                  <input id="txtsearch" type="text" class="form-control validation" id="item-code" placeholder="SEARCH STUDENT" onkeyup="this.value = this.value.toUpperCase();">
-                  <span class="input-group-append">
-                    <span type="button" class="btn btn-info btn-flat"><i class="fas fa-search"></i></span>
-                  </span>
-                </div>
-              </div> --}}
+                            
                             <div class="row">
                                 <div class="table-responsive" style="height: 28em; overflow: scroll;">
                                     <table class="table table-striped">
@@ -306,24 +275,24 @@
                     <button id="sendsms" type="button" class="btn btn-primary">SEND SMS</button>
                 </div>
             </div>
-        </div> {{-- dialog --}}
+        </div> 
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('footerscripts')
-    <script src="{{ asset('plugins/daterangepicker/daterangepicker.js') }}"></script>
-    <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
-    <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
-    <script src="{{ asset('plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('plugins/jszip/jszip.min.js') }}"></script>
-    <script src="{{ asset('plugins/pdfmake/pdfmake.min.js') }}"></script>
-    <script src="{{ asset('plugins/pdfmake/vfs_fonts.js') }}"></script>
-    <script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
-    <script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
-    <script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
+<?php $__env->startSection('footerscripts'); ?>
+    <script src="<?php echo e(asset('plugins/daterangepicker/daterangepicker.js')); ?>"></script>
+    <script src="<?php echo e(asset('plugins/datatables/jquery.dataTables.min.js')); ?>"></script>
+    <script src="<?php echo e(asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')); ?>"></script>
+    <script src="<?php echo e(asset('plugins/datatables-responsive/js/dataTables.responsive.min.js')); ?>"></script>
+    <script src="<?php echo e(asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js')); ?>"></script>
+    <script src="<?php echo e(asset('plugins/datatables-buttons/js/dataTables.buttons.min.js')); ?>"></script>
+    <script src="<?php echo e(asset('plugins/datatables-buttons/js/buttons.bootstrap4.min.js')); ?>"></script>
+    <script src="<?php echo e(asset('plugins/jszip/jszip.min.js')); ?>"></script>
+    <script src="<?php echo e(asset('plugins/pdfmake/pdfmake.min.js')); ?>"></script>
+    <script src="<?php echo e(asset('plugins/pdfmake/vfs_fonts.js')); ?>"></script>
+    <script src="<?php echo e(asset('plugins/datatables-buttons/js/buttons.html5.min.js')); ?>"></script>
+    <script src="<?php echo e(asset('plugins/datatables-buttons/js/buttons.print.min.js')); ?>"></script>
+    <script src="<?php echo e(asset('plugins/datatables-buttons/js/buttons.colVis.min.js')); ?>"></script>
     <script>
         $(document).ready(function() {
             const Toast = Swal.mixin({
@@ -358,7 +327,7 @@
                 })
 
                 $.ajax({
-                    url: '{{ route('statementofacctgenerate') }}',
+                    url: '<?php echo e(route('statementofacctgenerate')); ?>',
                     type: 'GET',
                     data: {
                         selectedschoolyear: $('#selectedschoolyear').val(),
@@ -398,7 +367,7 @@
             function get_statement_account() {
 
                 $.ajax({
-                    url: '{{ route('statementofacctgenerate') }}',
+                    url: '<?php echo e(route('statementofacctgenerate')); ?>',
                     type: 'GET',
                     data: {
                         selectedschoolyear: $('#selectedschoolyear').val(),
@@ -443,7 +412,7 @@
 
                     var studid = $(this).attr('id');
                     $.ajax({
-                        url: '{{ route('statementofacctgetaccount') }}',
+                        url: '<?php echo e(route('statementofacctgetaccount')); ?>',
                         type: 'GET',
                         data: {
                             studid: studid,
@@ -502,7 +471,7 @@
             //         var selectedmonth = $('#selectedmonth').val();
             //         var studid = $(this).attr('id');
             //         $.ajax({
-            //             url: '{{ route('statementofacctgetaccount') }}',
+            //             url: '<?php echo e(route('statementofacctgetaccount')); ?>',
             //             type: 'GET',
             //             data: {
             //                 studid: studid,
@@ -647,7 +616,7 @@
 
                 $.ajax({
                     type: "GET",
-                    url: "{{ route('statementofacctloadsection') }}",
+                    url: "<?php echo e(route('statementofacctloadsection')); ?>",
                     data: {
                         levelid: levelid,
                         syid: syid,
@@ -684,7 +653,7 @@
 
                 $.ajax({
                     type: "GET",
-                    url: "{{ route('statementofaccsmsnotify') }}",
+                    url: "<?php echo e(route('statementofaccsmsnotify')); ?>",
                     data: {
                         syid: syid,
                         semid: semid,
@@ -754,7 +723,7 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    url: "{{ route('statementofaccsmssend') }}",
+                    url: "<?php echo e(route('statementofaccsmssend')); ?>",
                     data: {
                         sms_list: sms_list,
                         syid: syid,
@@ -819,7 +788,7 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    url: "{{ route('statementofaccaddflag') }}",
+                    url: "<?php echo e(route('statementofaccaddflag')); ?>",
                     data: {
                         syid: syid,
                         semid: semid,
@@ -859,7 +828,7 @@
             function select_month_range() {
                 $.ajax({
                     type: "GET",
-                    url: "{{ route('statementofacctgetmonthrange') }}", // Ensure this route is defined
+                    url: "<?php echo e(route('statementofacctgetmonthrange')); ?>", // Ensure this route is defined
                     success: function(data) {
                         table_range(data)
                         $('#selectedmonthrange').empty();
@@ -934,7 +903,7 @@
 
                 $.ajax({
                     type: "GET",
-                    url: "{{ route('statementofacctupdatemonthrange') }}",
+                    url: "<?php echo e(route('statementofacctupdatemonthrange')); ?>",
                     data: {
                         id: id,
                         start_month: sdate,
@@ -963,7 +932,7 @@
 
             //     $.ajax({
             //         type: "GET",
-            //         url: "{{ route('statementofacctselectedmonthrange') }}",
+            //         url: "<?php echo e(route('statementofacctselectedmonthrange')); ?>",
             //         data: {
             //             rangeid: rangeid
             //         },
@@ -983,7 +952,7 @@
 
                 $.ajax({
                     type: "GET",
-                    url: "{{ route('statementofacctselectedmonthrange') }}",
+                    url: "<?php echo e(route('statementofacctselectedmonthrange')); ?>",
                     data: {
                         rangeid: rangeid
                     },
@@ -1028,7 +997,7 @@
 
                 $.ajax({
                     type: "GET",
-                    url: "{{ route('addmonthrange') }}",
+                    url: "<?php echo e(route('addmonthrange')); ?>",
                     data: {
                         start_month: start_month,
                         end_month: end_month,
@@ -1068,7 +1037,7 @@
                     if (result.value) {
                         $.ajax({
                             type: "GET",
-                            url: "{{ route('statementofacctremovemonthrange') }}",
+                            url: "<?php echo e(route('statementofacctremovemonthrange')); ?>",
                             data: {
                                 id: id
                             },
@@ -1122,7 +1091,7 @@
                 });
             });
 
-            var withEmailer = {{ isset($schoolinfo->withEmailer) ? (int) $schoolinfo->withEmailer : 0 }};
+            var withEmailer = <?php echo e(isset($schoolinfo->withEmailer) ? (int) $schoolinfo->withEmailer : 0); ?>;
 
             if (withEmailer === 1) {
                 $('#btn-print').prop('disabled', false);
@@ -1131,4 +1100,6 @@
             }
         })
     </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('finance.layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\laragon\www\es_ldcu2\resources\views/finance/statementofaccount/index.blade.php ENDPATH**/ ?>
