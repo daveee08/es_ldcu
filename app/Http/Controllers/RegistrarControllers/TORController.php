@@ -53,7 +53,7 @@ class TORController extends Controller
                         $query->orWhere('levelname', 'like', '%' . $search . '%');
                     });
                 }
-                
+
                 $students = $students->take($request->get('length'))
                     ->latest('studinfo.id')
                     ->skip($request->get('start'))
@@ -116,7 +116,7 @@ class TORController extends Controller
                     ->whereIn('college_enrolledstud.studstatus', [1, 2, 4]);
             }
 
-            
+
 
             if ($search != null) {
                 $studentscount = $studentscount->where(function ($query) use ($search) {
@@ -214,7 +214,7 @@ class TORController extends Controller
                     }else{
                         $coursename = '';
                     }
-                   
+
                 }
             }
         }
@@ -338,14 +338,14 @@ class TORController extends Controller
     }
     public function getinfo(Request $request){
         $studentid = $request->get('studid');
-        
+
         $student = DB::table('studinfo')
                     ->join('gradelevel', 'studinfo.levelid', 'gradelevel.id')
                     ->join('college_courses', 'studinfo.courseid', 'college_courses.id')
                     ->where('studinfo.id', $studentid)
                     ->select('studinfo.sid', 'gradelevel.levelname', 'college_courses.courseDesc' )
                     ->first();
-                    
+
         return response()->json($student);
     }
     public function getrecord(Request $request)
@@ -530,7 +530,7 @@ class TORController extends Controller
         //         'shssy' => $guardianaddress
         //     ]);
 
-        
+
 
 
 
@@ -1078,7 +1078,7 @@ class TORController extends Controller
             }else{
                 $coursename = '';
             }
-           
+
         }
 
         if (str_contains(strtolower($coursename), 'major in')) {
@@ -1109,7 +1109,7 @@ class TORController extends Controller
             ->leftjoin('studinfo_more', 'studinfo.id', 'studinfo_more.studid')
             ->where('college_tordetail.deleted', '0')
             ->first();
-            
+
 
         if (!$details) {
             $details = (object) array(
@@ -1536,11 +1536,11 @@ class TORController extends Controller
             $pdf = PDF::loadview('registrar/forms/tor/pdf/pdf_tor_sait', compact('schoolinfo', 'studentinfo', 'records', 'maxsubjcount', 'details', 'registrar', 'assistantreg', 'or', 'dateissued', 'getphoto', 'lastterm', 'acadprog', 'enrollment_his', 'iscollege_grad'))->setPaper('legal', 'portrait');
             $pdf->getDomPDF()->set_option("enable_php", true);
             return $pdf->stream('TOR.pdf');
-            // $pdf = PDF::loadview('registrar/pdf/pdf_tor_gbbc_dompdf',compact('schoolinfo','studentinfo','records','maxsubjcount','details','registrar','assistantreg','or','dateissued'))->setPaper('legal','portrait'); 
+            // $pdf = PDF::loadview('registrar/pdf/pdf_tor_gbbc_dompdf',compact('schoolinfo','studentinfo','records','maxsubjcount','details','registrar','assistantreg','or','dateissued'))->setPaper('legal','portrait');
             // return $pdf->stream('TOR.pdf');
         }
 
-        // $pdf = PDF::loadview('registrar/pdf/pdf_tor_gbbc',compact('schoolinfo','studentinfo','records','maxsubjcount'))->setPaper('legal','portrait'); 
+        // $pdf = PDF::loadview('registrar/pdf/pdf_tor_gbbc',compact('schoolinfo','studentinfo','records','maxsubjcount'))->setPaper('legal','portrait');
         // return $pdf->stream('TOR.pdf');
 
         // $pdf = new TOR_TCPDF_GBBC(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
@@ -1591,7 +1591,7 @@ class TORController extends Controller
         // $view = \View::make('registrar/pdf/pdf_tor_gbbc',compact('schoolinfo','studentinfo','records','maxsubjcount','details'));
         // $html = $view->render();
         // $pdf->writeHTML($html, true, false, true, false, '');
-        // // $image_file =  asset($studentinfo->picurl); 
+        // // $image_file =  asset($studentinfo->picurl);
         // // return $image_file;
         // // $pdf->Image('@'.file_get_contents($image_file),25,5,22,22);
         // // ---------------------------------------------------------

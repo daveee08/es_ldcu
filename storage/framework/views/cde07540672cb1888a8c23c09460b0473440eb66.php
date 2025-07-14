@@ -44,7 +44,7 @@
                         <h3 class="card-title"><b>Transcript of Records</b></h3>
                     </div>
                     <div class="card-body bg-success p-2">
-                        <a class="btn btn-app text-white ml-0" href="/manageaccounts">
+                        <a class="btn btn-app text-white ml-0" href="/superadmin/download/tor-batch">
                             <i class="fas fa-file-pdf text-warning icon-display mb-2"></i> <b>PDF Copy</b>
                         </a>
                     </div>
@@ -56,7 +56,7 @@
                         <h3 class="card-title"><b>SF9</b></h3>
                     </div>
                     <div class="card-body bg-success p-2">
-                        <a class="btn btn-app text-white ml-0" href="/manageaccounts">
+                        <a class="btn btn-app text-white ml-0" href="/superadmin/download/tor-batch">
                             <i class="fas fa-file-pdf text-warning icon-display mb-2"></i> <b>PDF Copy</b>
                         </a>
                     </div>

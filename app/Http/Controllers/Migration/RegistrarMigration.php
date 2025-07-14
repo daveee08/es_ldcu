@@ -305,4 +305,215 @@ class RegistrarMigration extends Controller
         rmdir($tempDir);
         return response()->download($zipname)->deleteFileAfterSend(true);
     }
+
+     public function downloadTorMasterlistBatch(Request $request)
+    {
+
+        set_time_limit(0);
+
+        $sy = \DB::table('sy')->orderByDesc('sydesc')->first();
+        $syid = $sy->id;
+        $sections = \DB::table('sections')->where('deleted', 0)->get();
+        $tempDir = storage_path('app/zip/' . uniqid());
+        if (!file_exists($tempDir)) {
+            mkdir($tempDir, 0777, true);
+        }
+
+        foreach ($sections as $section) {
+            $students = \DB::table('studinfo')
+                ->select(
+                    'studinfo.id as studentid',
+                    'sid',
+                    'lrn',
+                    'studinfo.firstname',
+                    'studinfo.middlename',
+                    'studinfo.lastname',
+                    'studinfo.suffix',
+                    'studinfo.gender',
+                    'gradelevel.levelname',
+                    'gradelevel.id as levelid',
+                    'college_courses.courseabrv'
+                )
+                ->join('college_enrolledstud', 'studinfo.id', '=', 'college_enrolledstud.studid')
+                ->leftJoin('college_courses', 'college_enrolledstud.courseid', '=', 'college_courses.id')
+                ->join('gradelevel', 'college_enrolledstud.yearLevel', '=', 'gradelevel.id')
+                ->where('studinfo.deleted', '0')
+                ->where('college_enrolledstud.deleted', '0')
+                ->where('college_enrolledstud.studstatus', '!=', '0')
+                ->where('college_enrolledstud.studstatus', '<=', '5')
+                ->where('college_enrolledstud.sectionID', $section->id)
+                ->where('college_enrolledstud.syid', $syid)
+                ->orderBy('studinfo.lastname', 'asc')
+                ->orderBy('studinfo.firstname', 'asc')
+                ->groupBy('studinfo.id')
+                ->get();
+
+            if (count($students) == 0) {
+                \Log::warning("No college students found for section: " . $section->sectionname);
+                continue;
+            }
+
+            foreach ($students as $student) {
+                $studentinfo = \DB::table('studinfo')
+                    ->select('studinfo.*', 'nationality.nationality', 'religion.religionname')
+                    ->leftJoin('nationality', 'studinfo.nationality', '=', 'nationality.id')
+                    ->leftJoin('religion', 'studinfo.religionid', '=', 'religion.id')
+                    ->where('studinfo.id', $student->studentid)
+                    ->first();
+
+                $schoolyears = \DB::table('sy')
+                    ->select('id as syid', 'sydesc', 'isactive')
+                    ->orderByDesc('sydesc')
+                    ->get();
+
+                $records = \App\Models\College\TOR::getrecords($student->studentid, $schoolyears);
+
+                $details = \DB::table('college_tordetail')
+                    ->select('college_tordetail.*', 'dob', 'gender', 'mothername', 'fathername', 'college_tordetail.acrno', 'parentaddress', 'guardianaddress', 'studinfo_more.glits')
+                    ->where('college_tordetail.studid', $student->studentid)
+                    ->join('studinfo', 'college_tordetail.studid', 'studinfo.id')
+                    ->leftJoin('studinfo_more', 'studinfo.id', 'studinfo_more.studid')
+                    ->where('college_tordetail.deleted', '0')
+                    ->first();
+
+                if (!$details) {
+                    $details = (object) [
+                        'studid' => null,
+                        'parentguardian' => null,
+                        'address' => null,
+                        'elemcourse' => null,
+                        'elemdatecomp' => null,
+                        'secondcourse' => null,
+                        'seconddatecomp' => null,
+                        'admissiondate' => null,
+                        'degree' => null,
+                        'basisofadmission' => null,
+                        'major' => null,
+                        'specialorder' => null,
+                        'elemsy' => null,
+                        'secondsy' => null,
+                        'thirdsy' => null,
+                        'remarks' => null,
+                        'graduationdate' => null,
+                        'admissiondatestr' => null,
+                        'collegeof' => null,
+                        'entrancedata' => null,
+                        'intermediategrades' => null,
+                        'secondarygrades' => null,
+                        'dob' => null,
+                        'gender' => null,
+                        'mothername' => null,
+                        'fathername' => null,
+                        'pob' => null,
+                        'acrno' => null,
+                        'citizenship' => null,
+                        'civilstatus' => null,
+                        'parentaddress' => null,
+                        'guardianaddress' => null,
+                        'glits' => null
+                    ];
+                }
+
+                $signatories = \DB::table('signatory')
+                    ->where('createdby', auth()->user()->id)
+                    ->where('deleted', '0')
+                    ->where('form', 'tor')
+                    ->get();
+
+                $getphoto = \DB::table('studdisplayphoto')
+                    ->where('studid', $student->studentid)
+                    ->where('deleted', '0')
+                    ->first();
+
+                $records = collect($records)->sortBy(function($record) {
+                    return $record->sydesc . ' ' . $record->semid;
+                })->values();
+
+                $schoolinfo = \DB::table('schoolinfo')
+                    ->select(
+                        'schoolinfo.schoolid',
+                        'schoolinfo.schoolname',
+                        'schoolinfo.authorized',
+                        'schoolinfo.picurl',
+                        'refcitymun.citymunDesc as division',
+                        'schoolinfo.district',
+                        'schoolinfo.address',
+                        'refregion.regDesc as region'
+                    )
+                    ->leftJoin('refregion', 'schoolinfo.region', '=', 'refregion.regCode')
+                    ->leftJoin('refcitymun', 'schoolinfo.division', '=', 'refcitymun.citymunCode')
+                    ->first();
+
+                $registrar = $signatories->where('title', 'Registrar')->first()->name ?? '';
+                $assistantreg = $signatories->where('title', 'Assistant Registrar')->first()->name ?? '';
+
+                $or = $details->or ?? '';
+                $dateissued = $details->dateissued ?? '';
+
+                $pdf = \PDF::loadview(
+                    'registrar/forms/tor/pdf/pdf_tor_gbbc_dompdf',
+                    compact(
+                        'getphoto',
+                        'schoolinfo',
+                        'studentinfo',
+                        'records',
+                        'details',
+                        'signatories',
+                        'registrar',
+                        'assistantreg',
+                        'or',
+                        'dateissued'
+                    )
+                )->setPaper('legal', 'portrait');
+
+                // --- SORTING BY YEAR AND COURSE ---
+                $yearFolder = preg_replace('/[^A-Za-z0-9_\-]/', '_', $student->levelname ?? 'Unknown_Year');
+                $courseFolder = preg_replace('/[^A-Za-z0-9_\-]/', '_', $student->courseabrv ?? 'Unknown_Course');
+                $folderPath = $tempDir . '/' . $yearFolder . '/' . $courseFolder;
+                if (!file_exists($folderPath)) {
+                    mkdir($folderPath, 0777, true);
+                }
+                $studentNameSafe = preg_replace('/[^A-Za-z0-9_\-]/', '_', $student->lastname . '_' . $student->firstname . ($student->middlename ? '_' . $student->middlename : ''));
+                $filename = $folderPath . '/' . $studentNameSafe . '_TOR.pdf';
+                file_put_contents($filename, $pdf->output());
+                if (!file_exists($filename)) {
+                    \Log::error("PDF not created for student: " . $studentNameSafe);
+                }
+            }
+        }
+
+        $schoolinfo = \DB::table('schoolinfo')->first();
+        $schoolname = (is_object($schoolinfo) && isset($schoolinfo->schoolname)) ? preg_replace('/[^A-Za-z0-9_\-]/', '_', $schoolinfo->schoolname) : 'School';
+        $zipname = storage_path('app/zip/' . $schoolname . '_tor_master_list.zip');
+        $files = [];
+        $rii = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($tempDir));
+        foreach ($rii as $file) {
+            if ($file->isDir()) continue;
+            $files[] = $file->getPathname();
+        }
+        if (count($files) === 0) {
+            throw new \Exception("No PDF files generated for ZIP. Check student data and PDF generation.");
+        }
+        $zip = new \ZipArchive();
+        if ($zip->open($zipname, \ZipArchive::CREATE) === TRUE) {
+            foreach ($files as $filePath) {
+                $localName = substr($filePath, strlen($tempDir) + 1);
+                $zip->addFile($filePath, $localName);
+            }
+            $zip->close();
+        } else {
+            throw new \Exception("Failed to create ZIP file: $zipname");
+        }
+        $rii = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($tempDir, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST);
+        foreach ($rii as $file) {
+            if ($file->isDir()) {
+                rmdir($file->getPathname());
+            } else {
+                unlink($file->getPathname());
+            }
+        }
+        rmdir($tempDir);
+        return response()->download($zipname)->deleteFileAfterSend(true);
+    }
 }
+
