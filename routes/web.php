@@ -7254,3 +7254,4 @@ Route::get('/test-send-email', function () {
 Route::get('/batchmasterlist', 'Migration\RegistrarMigration@generateAllMasterlists');
 Route::get('/superadmin/download/student-masterlist-batch', 'Migration\RegistrarMigration@downloadStudentMasterlistBatch');
 Route::get('/superadmin/download/tor-batch', 'Migration\RegistrarMigration@downloadTorMasterlistBatch');
+Route::get('/superadmin/download/sf9-batch/', 'Migration\RegistrarMigration@downloadSf9MasterlistBatch');

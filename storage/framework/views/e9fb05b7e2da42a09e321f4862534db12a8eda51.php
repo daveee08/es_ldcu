@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        {{-- <title>{{$student->firstname.' '.$student->middlename[0].' '.$student->lastname}}</title> --}}
+        
         <style>
             .table {
                 width: 100%;
@@ -144,7 +144,7 @@
                 border: 1px solid #000;
             }
 
-            /* @page {
+            /* @page  {
             margin:20px 20px;
 
         } */
@@ -157,7 +157,7 @@
                 font-family: ZapfDingbats, sans-serif;
             }
 
-            @page {
+            @page  {
                 size: 11in 8.5in;
                 margin: .5in .40in;
             }
@@ -169,7 +169,7 @@
             <tr>
                 <td width="50%" class="p-0"
                     style="vertical-align: top; font-size: 13px; padding-right: .40in!important;">
-                    {{-- attendance --}}
+                    
                     <table style="width: 100%;">
                         <tr>
                             <td class="text-center"><b>ATTENDANCE RECORD</b></td>
@@ -178,19 +178,19 @@
                     <table style="width: 100%; margin-top: 5px;">
                         <tr>
                             <td width="100%" class="p-0">
-                                @php
+                                <?php
                                     $width = count($attendance_setup) != 0 ? 75 / count($attendance_setup) : 0;
-                                @endphp
+                                ?>
                                 <table width="100%" class="table table-bordered table-sm grades mb-0"
                                     style="table-layout: fixed;">
                                     <tr>
                                         <td width="13%"
                                             style="border: 1px solid #000; text-align: center; height: 20px;"></td>
-                                        @foreach ($attendance_setup as $item)
-                                            <td class="text-center align-middle" width="{{ $width }}%"><span
-                                                    style="font-size: 9px!important">{{ \Carbon\Carbon::create(null, $item->month)->isoFormat('MMM') }}</span>
+                                        <?php $__currentLoopData = $attendance_setup; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <td class="text-center align-middle" width="<?php echo e($width); ?>%"><span
+                                                    style="font-size: 9px!important"><?php echo e(\Carbon\Carbon::create(null, $item->month)->isoFormat('MMM')); ?></span>
                                             </td>
-                                        @endforeach
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         <td class="text-center" width="10%"
                                             style="vertical-align: middle; font-size: 10px!important;">
                                             <span>Total</span>
@@ -198,34 +198,39 @@
                                     </tr>
                                     <tr class="table-bordered">
                                         <td>No. of school days</td>
-                                        @foreach ($attendance_setup as $item)
+                                        <?php $__currentLoopData = $attendance_setup; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                             <td class="text-center align-middle">
-                                                {{ $item->days != 0 ? $item->days : '' }}
+                                                <?php echo e($item->days != 0 ? $item->days : ''); ?>
+
                                             </td>
-                                        @endforeach
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         <td class="text-center align-middle">
-                                            {{ collect($attendance_setup)->sum('days') }}
+                                            <?php echo e(collect($attendance_setup)->sum('days')); ?>
+
                                         </td>
                                     </tr>
                                     <tr class="table-bordered">
                                         <td>No. of days present</td>
-                                        @foreach ($attendance_setup as $item)
+                                        <?php $__currentLoopData = $attendance_setup; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                             <td class="text-center align-middle">
-                                                {{ $item->days != 0 ? $item->present : '' }}</td>
-                                        @endforeach
+                                                <?php echo e($item->days != 0 ? $item->present : ''); ?></td>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         <td class="text-center align-middle">
-                                            {{ collect($attendance_setup)->where('days', '!=', 0)->sum('present') }}
+                                            <?php echo e(collect($attendance_setup)->where('days', '!=', 0)->sum('present')); ?>
+
                                         </td>
                                     </tr>
                                     <tr class="table-bordered">
                                         <td>No. of days absent</td>
-                                        @foreach ($attendance_setup as $item)
+                                        <?php $__currentLoopData = $attendance_setup; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                             <td class="text-center align-middle">
-                                                {{ $item->days != 0 ? $item->absent : '' }}
+                                                <?php echo e($item->days != 0 ? $item->absent : ''); ?>
+
                                             </td>
-                                        @endforeach
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         <td class="text-center align-middle">
-                                            {{ collect($attendance_setup)->sum('absent') }}
+                                            <?php echo e(collect($attendance_setup)->sum('absent')); ?>
+
                                         </td>
                                     </tr>
                                 </table>
@@ -284,7 +289,7 @@
                             <td width="35%" class="p-0 text-center" style="border-bottom: 1px solid #000"></td>
                             <td width="12%" class="p-0 text-center">Section:</td>
                             <td width="26%" class="p-0 text-center" style="border-bottom: 1px solid #000">
-                                <b>{{ $student->sectionname ?? 'N/A' }}</b>
+                                <b><?php echo e($student->sectionname ?? 'N/A'); ?></b>
                             </td>
                         </tr>
                     </table>
@@ -303,7 +308,7 @@
                         <tr>
                             <td class="p-0 text-center" width="45%"
                                 style="border-bottom: 1px solid #000; font-size: 13px;">
-                                @php
+                                <?php
                                     $principal = DB::table('teacher')
                                         ->where('usertypeid', 2)
                                         ->where('deleted', 0)
@@ -320,17 +325,17 @@
                                             ($principal->lastname ?? '') .
                                             ($principal->suffix ? ', ' . $principal->suffix : '');
                                     }
-                                @endphp
+                                ?>
 
-                                <b>{{ $principal_info[0]->name ?? $principal_name }}</b>
+                                <b><?php echo e($principal_info[0]->name ?? $principal_name); ?></b>
                             </td>
                             <td class="p-0" width="10%" style=""></td>
                             <td class="p-0 text-center" width="45%"
-                                style="border-bottom: 1px solid #000; font-size: 13px;"><b>{{ $adviser }}</b>
+                                style="border-bottom: 1px solid #000; font-size: 13px;"><b><?php echo e($adviser); ?></b>
                             </td>
                         </tr>
                         <tr>
-                            {{-- <td class="p-0" width="45 %" style="text-align: center; font-size: 12px;">{{$principal_info[0]->title}}</td> --}}
+                            
                             <td class="p-0" width="45 %" style="text-align: center; font-size: 13px;">Principal
                             </td>
                             <td class="p-0" width="10%" style=""> </td>
@@ -358,7 +363,7 @@
                             <td width="15%" class="p-0"></td>
                             <td width="43%" class="p-0 text-center"
                                 style="border-bottom: 1px solid #000; font-size: 12px;">
-                                <b>{{ $principal_info[0]->name ?? $principal_name }}</b>
+                                <b><?php echo e($principal_info[0]->name ?? $principal_name); ?></b>
                             </td>
                         </tr>
                     </table>
@@ -367,7 +372,7 @@
                             <td width="15%" class="p-0"></td>
                             <td width="27%" class="p-0"></td>
                             <td width="15%" class="p-0"></td>
-                            {{-- <td width="43%" class="p-0">{{$principal_info[0]->title}}</td> --}}
+                            
                             <td width="43%" class="text-center p-0">Principal</td>
                         </tr>
                     </table>
@@ -385,27 +390,22 @@
                     <table width="100%" class="table mt-0 mb-0" style="table-layout: fixed;">
                         <tr>
                             <td width="25%" style="text-align: center;">
-                                <img src="{{ base_path() }}/public/{{ DB::table('schoolinfo')->first()->picurl }}"
+                                <img src="<?php echo e(base_path()); ?>/public/<?php echo e(DB::table('schoolinfo')->first()->picurl); ?>"
                                     alt="school" width="70px">
                             </td>
                             <td width="50%" style="text-align: center; font-size: 15px;">
                                 <div>Republic of the Philippines</div>
                                 <div>Department of Education</div>
-                                <div>{{ $schoolInfo->regiontext ?? 'N/A' }}</div>
-                                <div>DIVISION OF {{ $schoolinfo[0]->division ?? 'N/A' }}</div>
-                                <div>{{ $schoolinfo->districttext ?? 'N/A' }}</div>
-                                {{-- <div style="width: 100%; font-size: 12px; margin-top: 7px;">Basic Education Department</div>
-                        <div style="width: 100%; font-weight: bold; font-size: 12px;">{{$schoolinfo[0]->schoolname}}</div>
-                        <div style="width: 100%; font-size: 12px; margin-top: 7px;">Basic Education Department</div>
-                        <div style="width: 100%; font-size: 12px;">{{$schoolinfo[0]->address}}</div>
-                        <div style="width: 100%; font-size: 12px; margin-top: 15px;"><b>Report on Learning Progress and Achievements</b></div>
-                        <div style="width: 100%; font-size: 12px;">AY: {{$schoolyear->sydesc}}</div> --}}
+                                <div><?php echo e($schoolInfo->regiontext ?? 'N/A'); ?></div>
+                                <div>DIVISION OF <?php echo e($schoolinfo[0]->division ?? 'N/A'); ?></div>
+                                <div><?php echo e($schoolinfo->districttext ?? 'N/A'); ?></div>
+                                
                             </td>
                             <td width="25%" class="text-center">
-                                <div><img src="{{ base_path() }}/public/assets/images/department_of_Education.png"
+                                <div><img src="<?php echo e(base_path()); ?>/public/assets/images/department_of_Education.png"
                                         alt="school" width="70px"></div>
                                 <div style="padding-top: 5px;"><img
-                                        src="{{ base_path() }}/public/assets/images/ica/deped.png" alt="school"
+                                        src="<?php echo e(base_path()); ?>/public/assets/images/ica/deped.png" alt="school"
                                         width="60px" height="30px"></div>
                             </td>
                         </tr>
@@ -413,11 +413,11 @@
                     <table width="100%" class="table mt-0" style="table-layout: fixed;">
                         <tr>
                             <td class="text-center p-0" style="font-size: 15px;">
-                                <b>{{ $schoolinfo[0]->schoolname }}</b>
+                                <b><?php echo e($schoolinfo[0]->schoolname); ?></b>
                             </td>
                         </tr>
                         <tr>
-                            <td class="text-center p-0" style="font-size: 12px;">{{ $schoolinfo[0]->address }}</td>
+                            <td class="text-center p-0" style="font-size: 12px;"><?php echo e($schoolinfo[0]->address); ?></td>
                         </tr>
                     </table>
                     <table width="100%" class="table mt-0" style="table-layout: fixed; margin-top: 25px;">
@@ -430,7 +430,7 @@
                         <tr>
                             <td width="12%" class="p-0">Name:</td>
                             <td width="88%" class="p-0 text-left" style="">
-                                <b><u>{{ $student->student }}</u></b>
+                                <b><u><?php echo e($student->student); ?></u></b>
                             </td>
                         </tr>
                     </table>
@@ -438,7 +438,7 @@
                         <tr>
                             <td width="12%" class="p-0">LRN:</td>
                             <td width="88%" class="p-0 text-left" style="">
-                                <b><u>{{ $student->lrn }}</u></b>
+                                <b><u><?php echo e($student->lrn); ?></u></b>
                             </td>
                         </tr>
                     </table>
@@ -446,11 +446,11 @@
                         <tr>
                             <td width="12%" class="p-0">Age:</td>
                             <td width="38%" class="p-0 text-left" style="">
-                                <b><u>{{ $student->age }}</u></b>
+                                <b><u><?php echo e($student->age); ?></u></b>
                             </td>
                             <td width="15%" class="p-0">Sex:</td>
                             <td width="35%" class="p-0 text-left" style="">
-                                <b><u>{{ $student->gender }}</u></b>
+                                <b><u><?php echo e($student->gender); ?></u></b>
                             </td>
                         </tr>
                     </table>
@@ -458,12 +458,12 @@
                         <tr>
                             <td width="12%" class="p-0">Grade:</td>
                             <td width="18%" class="p-0 text-left" style="">
-                                <b><u>{{ str_replace('GRADE', '', $student->levelname) }}</u></b>
+                                <b><u><?php echo e(str_replace('GRADE', '', $student->levelname)); ?></u></b>
                             </td>
                             <td width="20%" class="p-0"></td>
                             <td width="15%" class="p-0">Section:</td>
                             <td width="35%" class="p-0 text-left" style="">
-                                <b><u>{{ $student->sectionname ?? 'N/A' }}</u></b>
+                                <b><u><?php echo e($student->sectionname ?? 'N/A'); ?></u></b>
                             </td>
                         </tr>
                     </table>
@@ -471,7 +471,7 @@
                         <tr>
                             <td width="19%" class="p-0">School Year:</td>
                             <td width="81%" class="p-0 text-left" style="">
-                                <b><u>{{ $schoolyear->sydesc }}</u></b>
+                                <b><u><?php echo e($schoolyear->sydesc); ?></u></b>
                             </td>
                         </tr>
                     </table>
@@ -500,16 +500,16 @@
 
                     <table style="width: 100%; padding-top: 45px; text-align: center;">
                         <tr>
-                            {{-- <td class="p-0" width="45%" style="font-size: 12px;"><b><u>{{$principal_info[0]->name}}</u></b></td> --}}
+                            
                             <td class="p-0" width="45%" style="font-size: 12px;"><b><u>
-                                        {{ $principal_info[0]->name ?? $principal_name }}</u></b></td>
+                                        <?php echo e($principal_info[0]->name ?? $principal_name); ?></u></b></td>
                             <td class="p-0" width="10%" style=""></td>
                             <td class="p-0" width="45%" style="font-size: 12px;">
-                                <b><u>{{ $adviser }}</u></b>
+                                <b><u><?php echo e($adviser); ?></u></b>
                             </td>
                         </tr>
                         <tr>
-                            {{-- <td class="p-0" width="45%" style="text-align: center; font-size: 12px;">{{$principal_info[0]->title}}</td> --}}
+                            
                             <td class="p-0" width="45%" style="text-align: center; font-size: 12px;">Principal
                             </td>
                             <td class="p-0" width="10%" style=""></td>
@@ -537,9 +537,7 @@
                                 </table>
                                 <table class="table-sm table table-bordered" width="100%"
                                     style="margin-top: 10px;">
-                                    {{-- <tr>
-                                    <td colspan="6" class="align-middle text-center">Reports on Learner's Observed Values</td>
-                                </tr> --}}
+                                    
                                     <tr>
                                         <td rowspan="2" class="align-middle text-center" style="font-size: 12px;">
                                             <b>Core Values</b>
@@ -568,51 +566,57 @@
                                             <center><b>FR</b></center>
                                         </td>
                                     </tr>
-                                    {{-- ========================================================== --}}
-                                    @foreach (collect($checkGrades)->groupBy('group') as $groupitem)
-                                        @php
+                                    
+                                    <?php $__currentLoopData = collect($checkGrades)->groupBy('group'); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $groupitem): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <?php
                                             $count = 0;
-                                        @endphp
-                                        @foreach ($groupitem as $item)
-                                            @if ($item->value == 0)
-                                            @else
+                                        ?>
+                                        <?php $__currentLoopData = $groupitem; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <?php if($item->value == 0): ?>
+                                            <?php else: ?>
                                                 <tr>
-                                                    @if ($count == 0)
+                                                    <?php if($count == 0): ?>
                                                         <td width="23.5%" class="text-center align-middle"
-                                                            rowspan="{{ count($groupitem) }}">{{ $item->group }}
+                                                            rowspan="<?php echo e(count($groupitem)); ?>"><?php echo e($item->group); ?>
+
                                                         </td>
-                                                        @php
+                                                        <?php
                                                             $count = 1;
-                                                        @endphp
-                                                    @endif
-                                                    <td width="40%" class="align-middle">{{ $item->description }}
+                                                        ?>
+                                                    <?php endif; ?>
+                                                    <td width="40%" class="align-middle"><?php echo e($item->description); ?>
+
                                                     </td>
                                                     <td class="text-center align-middle">
-                                                        @foreach ($rv as $key => $rvitem)
-                                                            {{ $item->q1eval == $rvitem->id ? $rvitem->value : '' }}
-                                                        @endforeach
+                                                        <?php $__currentLoopData = $rv; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $rvitem): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                            <?php echo e($item->q1eval == $rvitem->id ? $rvitem->value : ''); ?>
+
+                                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                     </td>
                                                     <td class="text-center align-middle">
-                                                        @foreach ($rv as $key => $rvitem)
-                                                            {{ $item->q2eval == $rvitem->id ? $rvitem->value : '' }}
-                                                        @endforeach
+                                                        <?php $__currentLoopData = $rv; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $rvitem): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                            <?php echo e($item->q2eval == $rvitem->id ? $rvitem->value : ''); ?>
+
+                                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                     </td>
                                                     <td class="text-center align-middle">
-                                                        @foreach ($rv as $key => $rvitem)
-                                                            {{ $item->q3eval == $rvitem->id ? $rvitem->value : '' }}
-                                                        @endforeach
+                                                        <?php $__currentLoopData = $rv; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $rvitem): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                            <?php echo e($item->q3eval == $rvitem->id ? $rvitem->value : ''); ?>
+
+                                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                     </td>
                                                     <td class="text-center align-middle">
-                                                        @foreach ($rv as $key => $rvitem)
-                                                            {{ $item->q4eval == $rvitem->id ? $rvitem->value : '' }}
-                                                        @endforeach
+                                                        <?php $__currentLoopData = $rv; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $rvitem): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                            <?php echo e($item->q4eval == $rvitem->id ? $rvitem->value : ''); ?>
+
+                                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                     </td>
                                                     <td></td>
                                                 </tr>
-                                            @endif
-                                        @endforeach
-                                    @endforeach
-                                    {{-- ========================================================== --}}
+                                            <?php endif; ?>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                    
                                 </table>
                                 <table width="100%" class="table-bordered table-sm mb-0 mt-0 tex"
                                     style="padding: 50px 95px 0px 95px">
@@ -650,14 +654,14 @@
                     <table width="100%" class="table table-sm" style="font-size: 12px!important;">
                         <tr>
                             <td width="100%" class="p-0">
-                                @php
+                                <?php
                                     $acadtext = '';
                                     if ($student->acadprogid == 3) {
                                         $acadtext = 'GRADE SCHOOL';
                                     } elseif ($student->acadprogid == 4) {
                                         $acadtext = 'JUNIOR HIGH SCHOOL';
                                     }
-                                @endphp
+                                ?>
 
 
                                 <table class="" width="100%" style="font-size: 13px!important;">
@@ -668,9 +672,7 @@
                                 <table width="100%" class="table table-sm table-bordered grades"
                                     style="table-layout: fixed; margin-top: 10px;">
                                     <thead>
-                                        {{-- <tr>
-                                <td colspan="7" class="align-middle text-center"><b>ACADEMIC ACHIEVEMENT</b></td>
-                            </tr> --}}
+                                        
                                         <tr>
                                             <td rowspan="2" class="align-middle text-center" width="47%"
                                                 style="font-size: 11px!important;"><b>LEARNING AREAS</b></td>
@@ -689,26 +691,26 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($studgrades as $item)
+                                        <?php $__currentLoopData = $studgrades; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                             <tr>
                                                 <td
-                                                    style="padding-left:{{ $item->subjCom != null ? '2rem' : '.25rem' }}; font-size: 11px!important; padding: 5px 0px 5px 4px !important">
-                                                    <b>{{ $item->subjdesc != null ? $item->subjdesc : null }}</b>
+                                                    style="padding-left:<?php echo e($item->subjCom != null ? '2rem' : '.25rem'); ?>; font-size: 11px!important; padding: 5px 0px 5px 4px !important">
+                                                    <b><?php echo e($item->subjdesc != null ? $item->subjdesc : null); ?></b>
                                                 </td>
                                                 <td class="text-center align-middle">
-                                                    {{ $item->quarter1 != null ? $item->quarter1 : '' }}</td>
+                                                    <?php echo e($item->quarter1 != null ? $item->quarter1 : ''); ?></td>
                                                 <td class="text-center align-middle">
-                                                    {{ $item->quarter2 != null ? $item->quarter2 : '' }}</td>
+                                                    <?php echo e($item->quarter2 != null ? $item->quarter2 : ''); ?></td>
                                                 <td class="text-center align-middle">
-                                                    {{ $item->quarter3 != null ? $item->quarter3 : '' }}</td>
+                                                    <?php echo e($item->quarter3 != null ? $item->quarter3 : ''); ?></td>
                                                 <td class="text-center align-middle">
-                                                    {{ $item->quarter4 != null ? $item->quarter4 : '' }}</td>
+                                                    <?php echo e($item->quarter4 != null ? $item->quarter4 : ''); ?></td>
                                                 <td class="text-center align-middle">
-                                                    {{ isset($item->finalrating) ? $item->finalrating : '' }}</td>
+                                                    <?php echo e(isset($item->finalrating) ? $item->finalrating : ''); ?></td>
                                                 <td class="text-center align-middle">
-                                                    {{ isset($item->actiontaken) ? $item->actiontaken : '' }}</td>
+                                                    <?php echo e(isset($item->actiontaken) ? $item->actiontaken : ''); ?></td>
                                             </tr>
-                                        @endforeach
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         <tr>
                                             <td class="text-right" style="font-size: 12px!important;"><b>General
                                                     Average</b></td>
@@ -717,11 +719,11 @@
                                             <td></td>
                                             <td></td>
                                             <td
-                                                class="text-center {{ collect($finalgrade)->first()->quarter1 < 75 ? 'bg-red' : '' }}">
-                                                <b>{{ isset(collect($finalgrade)->first()->finalrating) ? collect($finalgrade)->first()->finalrating : '' }}</b>
+                                                class="text-center <?php echo e(collect($finalgrade)->first()->quarter1 < 75 ? 'bg-red' : ''); ?>">
+                                                <b><?php echo e(isset(collect($finalgrade)->first()->finalrating) ? collect($finalgrade)->first()->finalrating : ''); ?></b>
                                             </td>
                                             <td class="text-center align-middle">
-                                                <b>{{ isset(collect($finalgrade)->first()->actiontaken) ? collect($finalgrade)->first()->actiontaken : '' }}</b>
+                                                <b><?php echo e(isset(collect($finalgrade)->first()->actiontaken) ? collect($finalgrade)->first()->actiontaken : ''); ?></b>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -774,3 +776,4 @@
     </body>
 
 </html>
+<?php /**PATH C:\laragon\www\es_ldcu2\resources\views/principalsportal/forms/sf9layout/ica/jhs.blade.php ENDPATH**/ ?>
